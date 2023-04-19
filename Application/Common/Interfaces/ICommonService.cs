@@ -8,7 +8,7 @@ namespace Application.Common.Interfaces
         //IDateTime DateTimeService { get; }
         //IDomainEventService DomainEventService { get; }
         //IWebsiteSettingsService WebsiteSettingsService { get; }
-        //IApplicationDbContext ApplicationDBContext { get; }
+        IApplicationDbContext ApplicationDBContext { get; }
         //IOpenWeatherMapClient OpenWeatherMapClient { get; }
         //IEmailService EmailService { get; }
         //ICacheService CacheService { get; }
