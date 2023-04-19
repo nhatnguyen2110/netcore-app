@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{DCE2BFEC-FB3C-4059-BAFA-8ABD0C38FE27}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentations", "Presentations", "{3B3E38A7-705E-4745-B732-450F780418B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3DC069C2-D74C-45CA-813A-A4A5B49913FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Databases", "Databases", "{23273C77-F2C1-4C8B-8C8C-4E89ECC55AD8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{8B4D4C6E-1C7A-479A-9DE8-D9486AA53151}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{3E4CDA54-6B27-44E0-AB13-F91AEA3B39F9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E4CDA54-6B27-44E0-AB13-F91AEA3B39F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E4CDA54-6B27-44E0-AB13-F91AEA3B39F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E4CDA54-6B27-44E0-AB13-F91AEA3B39F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E4CDA54-6B27-44E0-AB13-F91AEA3B39F9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3E4CDA54-6B27-44E0-AB13-F91AEA3B39F9} = {3B3E38A7-705E-4745-B732-450F780418B0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {627923C1-89AA-43D0-A9C7-9B6E8DE278B1}
+	EndGlobalSection
+EndGlobal
