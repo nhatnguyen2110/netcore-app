@@ -12,6 +12,8 @@ This is a solution template for creating an ASP.NET Core following the principle
 * [MediatR](https://github.com/jbogard/MediatR)
 * [AutoMapper](https://automapper.org/)
 * [FluentValidation](https://fluentvalidation.net/)
+* [Google Recaptcha](https://www.google.com/recaptcha/about/)
+
 
 ## Getting Started
 
