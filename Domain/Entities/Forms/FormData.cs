@@ -2,9 +2,8 @@
 
 namespace Domain.Entities.Forms
 {
-    public class FormData : AuditableEntity
+    public class FormData : DomainEntity<int>, IAuditableEntity
     {
-        public int Id { get; set; }
         public string? DBTable { get; set; }
         public string? DBColumn { get; set; }
         public string? EditorType { get; set; }
@@ -24,5 +23,9 @@ namespace Domain.Entities.Forms
         public string? ClassCSS { get; set; }
         public string? PermissionRoles { get; set; }
         public bool Deleted { get; set; }
+        public DateTimeOffset? CreatedAtUTC { get; set; }
+        public string? CreatedBy { get; set; }
+        public DateTimeOffset? LastModifiedAtUTC { get; set; }
+        public string? LastModifiedBy { get; set; }
     }
 }
