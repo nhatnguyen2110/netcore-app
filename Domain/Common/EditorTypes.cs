@@ -19,8 +19,9 @@ namespace Domain.Common
         public static readonly EditorType datetime = new EditorType("DATETIME", "Date and Time entry");
         public static readonly EditorType dropdown = new EditorType("DROPDOWN", "List of options, single-select");
         public static readonly EditorType dropdown_null = new EditorType("DROPDOWN_NULL", "List of options, NULL allowed");
-        public static readonly EditorType form_type = new EditorType("FORM_TYPE", "Type of field");
+        public static readonly EditorType editor_type = new EditorType("EDITOR_TYPE", "Type of field");
         public static readonly EditorType datetime_utc = new EditorType("DATETIME_UTC", "Date and Time UTC entry");
+        public static readonly EditorType number = new EditorType("NUMBER", "A Number entry");
 
         public static List<EditorType> GetAllTypes()
         {

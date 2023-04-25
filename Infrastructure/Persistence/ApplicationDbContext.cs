@@ -1,14 +1,14 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities.Forms;
 using Domain.Entities.User;
-using Infrastructure.Persistance.Interceptors;
+using Infrastructure.Persistence.Interceptors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace Infrastructure.Persistance
+namespace Infrastructure.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<User>, IApplicationDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
     {
         private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
         public ApplicationDbContext(

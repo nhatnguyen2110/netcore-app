@@ -1,7 +1,14 @@
 using Application;
+using Application.Common.Interfaces;
 using Infrastructure;
+using Infrastructure.Persistence;
+using NLog;
+using WebAPI.Extensions;
+using WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+// NLog
+LogManager.LoadConfiguration(configFile: string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 // Add services to the container.
 
@@ -11,6 +18,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.ConfigureJWT(builder.Configuration);
 
 var app = builder.Build();
 
@@ -19,10 +29,18 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    // Initialise and seed database
+    using (var scope = app.Services.CreateScope())
+    {
+        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+        // await initialiser.InitialiseAsync();
+        await initialiser.SeedAsync();
+    }
 }
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

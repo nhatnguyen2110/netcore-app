@@ -10,7 +10,9 @@ namespace Domain.Entities.Forms
         public string? Name { get; set; }
         public string? DefaultValue { get; set; }
         public bool Required { get; set; }
-        public int MaxLength { get; set; }
+        public int? MaxLength { get; set; }
+        public int? MinValue { get; set; }
+        public int? MaxValue { get; set; }
         public int SortOrder { get; set; }
         public string? Tooltip { get; set; }
         public string? Javascript { get; set; }
