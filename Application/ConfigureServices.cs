@@ -4,6 +4,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace Application
@@ -22,7 +23,10 @@ namespace Application
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
 
             });
-            services.Configure<ApplicationSettings>(configuration.GetSection(nameof(ApplicationSettings)));
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            services.Configure<ApplicationSettings>(configuration.GetSection(nameof(ApplicationSettings)))
+             .AddScoped(cnf => cnf.GetService<IOptionsSnapshot<ApplicationSettings>>().Value);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             return services;
         }
     }

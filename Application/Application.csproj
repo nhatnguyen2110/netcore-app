@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Common\Exception\" />
+    <Folder Include="Functions\Accounts\Queries\" />
     <Folder Include="Functions\Form\" />
   </ItemGroup>
 

@@ -29,6 +29,8 @@ namespace Infrastructure
             services.AddTransient<IDateTimeService, DateTimeService>();
             services.AddScoped<ICommonService, CommonService>();
             services.ConfigureIdentity();
+            services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<ITokenService, TokenService>();
             return services;
         }
         public static void ConfigureIdentity(this IServiceCollection services)

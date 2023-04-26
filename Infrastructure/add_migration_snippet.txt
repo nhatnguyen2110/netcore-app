@@ -1,0 +1,5 @@
+﻿Run the below command in Package Manager Console:
+
+Add-Migration [your migration name] -OutputDir Persistence\Migrations -Project Libraries\Infrastructure -StartupProject Presentations\WebAPI
+
+Replace with your migration name
