@@ -3,6 +3,7 @@ using Application.Models;
 using Application.Models.Account;
 using Application.Models.Settings;
 using Domain;
+using Domain.Enums;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -29,7 +30,7 @@ namespace Application.Functions.Accounts.Commands.SignUp
         {
             try
             {
-                var result = await _identityService.CreateUserAsync(request);
+                var result = await _identityService.CreateUserAsync(request, new[] { RoleList.Member.ToString() });
                 return Response<Unit>.Success(Unit.Value, request.requestId);
             }
             catch (Exception ex)

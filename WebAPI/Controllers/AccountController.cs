@@ -1,8 +1,11 @@
-﻿using Application.Functions.Accounts.Commands.SignIn;
+﻿using Application.Common.Interfaces;
+using Application.Functions.Accounts.Commands.SignIn;
 using Application.Functions.Accounts.Commands.SignUp;
+using Application.Functions.Accounts.Queries.TFASetup;
 using Application.Models;
 using Application.Models.Account;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Controllers.Common;
 
@@ -10,6 +13,11 @@ namespace WebAPI.Controllers
 {
     public class AccountController : ApiControllerBase
     {
+        private readonly ICurrentUserService _currentUserService;
+        public AccountController(ICurrentUserService currentUserService)
+        {
+            _currentUserService = currentUserService;
+        }
         [HttpPost("[action]")]
         public async Task<ActionResult<Response<Unit>>> SignUp([FromBody] SignUpCommand command)
         {
@@ -24,9 +32,23 @@ namespace WebAPI.Controllers
             }
         }
         [HttpPost("[action]")]
-        public async Task<ActionResult<Response<SignInResultDto>>> AuthenticateUser([FromBody] SignInCommand command)
+        public async Task<ActionResult<Response<SignInResultDto>>> SignIn([FromBody] SignInCommand command)
         {
             var result = await Mediator.Send(command);
+            if (result.Succeeded)
+            {
+                return result;
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
+        [Authorize]
+        [HttpGet("tfa-setup")]
+        public async Task<ActionResult<Response<TFASetupDto>>> GetTFASetup()
+        {
+            var result = await Mediator.Send(new TFASetupQuery() { UserId = _currentUserService.UserId });
             if (result.Succeeded)
             {
                 return result;

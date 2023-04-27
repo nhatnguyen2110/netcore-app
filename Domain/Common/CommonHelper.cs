@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Domain.Common
 {

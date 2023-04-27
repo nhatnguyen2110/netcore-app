@@ -48,7 +48,8 @@ namespace Application.Functions.Accounts.Commands.SignIn
                         return new Response<SignInResultDto>(false, "can not decrypt username and password", ex.Message, "Failed to Login", request.requestId);
                     }
                 }
-                var result = await this._identityService.AuthorizeAsync(request, cancellationToken);
+                var result = await this._identityService.AuthorizeAsync(request);
+
                 return Response<SignInResultDto>.Success(result, request.requestId);
             }
             catch (Exception ex)

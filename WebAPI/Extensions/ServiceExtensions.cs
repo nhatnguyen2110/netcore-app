@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Domain;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -27,9 +28,21 @@ namespace WebAPI.Extensions
 
                         ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
                         ValidAudience = jwtSettings.GetSection("validAudience").Value,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey ?? ""))
                     };
                 });
+        }
+        public static void ConfigureCors(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(Constants.CorsPolicy, configurePolicy: builder =>
+                {
+                    builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyHeader();
+                });
+            });
         }
     }
 }

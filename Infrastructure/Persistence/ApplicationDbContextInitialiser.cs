@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.User;
+using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -56,7 +57,7 @@ namespace Infrastructure.Persistence
         public async Task TrySeedAsync()
         {
             // Default roles
-            var administratorRole = new IdentityRole("Administrator");
+            var administratorRole = new IdentityRole(RoleList.Administrator.ToString());
 
             if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
             {

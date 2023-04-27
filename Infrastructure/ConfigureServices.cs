@@ -44,7 +44,9 @@ namespace Infrastructure
                 o.Password.RequiredLength = 10;
                 o.User.RequireUniqueEmail = true;
             })
-            .AddRoles<IdentityRole>();
+            .AddRoles<IdentityRole>()
+            .AddSignInManager()
+            ;
             // builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
             builder.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
         }

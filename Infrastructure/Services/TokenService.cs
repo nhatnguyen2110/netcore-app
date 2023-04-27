@@ -34,14 +34,9 @@ namespace Infrastructure.Services
         }
         private List<Claim> GetClaims(ApplicationUser user, IList<string> roles)
         {
-            var claims = new List<Claim> {
-            new Claim(
-                ClaimTypes.Email,
-                ClaimTypes.Name,
-                user.UserName,
-                ClaimTypes.Expiration
-            )
-            };
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name, user.Id));
+            claims.Add(new Claim(ClaimTypes.Email, user.Email??""));
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
