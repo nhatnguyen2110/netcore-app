@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities.Forms;
+using Domain.Entities.Log;
 using Domain.Entities.User;
 using Infrastructure.Persistence.Interceptors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -20,6 +21,7 @@ namespace Infrastructure.Persistence
             _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
         }
         public DbSet<FormData> FormDatas => Set<FormData>();
+        public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

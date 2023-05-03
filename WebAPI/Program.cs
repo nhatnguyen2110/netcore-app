@@ -8,13 +8,18 @@ using NLog.Web;
 using WebAPI.Extensions;
 using WebAPI.Services;
 
-
+var builder = WebApplication.CreateBuilder(args);
 // Early init of NLog to allow startup and exception logging, before host is built
+#if !DEBUG
+var databaseTarget = (NLog.Targets.DatabaseTarget)LogManager.Configuration.FindTargetByName("ownDB-web");
+databaseTarget.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+LogManager.ReconfigExistingLoggers();
+#endif
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
 try
 {
-    var builder = WebApplication.CreateBuilder(args);
+
 
     // Add services to the container.
 
