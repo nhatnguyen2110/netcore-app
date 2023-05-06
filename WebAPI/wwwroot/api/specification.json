@@ -1,0 +1,619 @@
+{
+  "x-generator": "NSwag v13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Net Core Web API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/Account/SignUp": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_SignUp",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfUnit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Account/SignIn": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_SignIn",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfSignInResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Account/SignInWithTFA": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_SignInWithTFA",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInWithTFACommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfSignInResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Account/tfa-setup": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_GetTFASetup",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfTFASetupDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_PostTFASetup",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TFAEnableCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfUnit"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_DeleteTFASetup",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TFAEnableCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfUnit"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Cache/ClearAll": {
+      "delete": {
+        "tags": [
+          "Cache"
+        ],
+        "operationId": "Cache_ClearAll",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/Cache/ClearByKey": {
+      "delete": {
+        "tags": [
+          "Cache"
+        ],
+        "operationId": "Cache_ClearByKey",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/System/RSAEncryptData": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "operationId": "System_RSAEncryptData",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EncryptedDataRequestModel"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ResponseOfUnit": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Response"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/Unit"
+              }
+            }
+          }
+        ]
+      },
+      "Unit": {
+        "type": "object",
+        "description": "Represents a void type, since Void is not a valid return type in C#.",
+        "additionalProperties": false
+      },
+      "Response": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "succeeded": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "systemError": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestId": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "responseTime": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SignUpCommand": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/UserForRegistrationDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "requestId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "UserForRegistrationDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ResponseOfSignInResultDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Response"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/SignInResultDto"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "SignInResultDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "userInfo": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UserInfoDto"
+              }
+            ]
+          },
+          "isTFAEnabled": {
+            "type": "boolean"
+          },
+          "isAuthSuccessful": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserInfoDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFirstLogin": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SignInCommand": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/UserForAuthenticationDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "recaptchaToken": {
+                "type": "string",
+                "nullable": true
+              },
+              "requestId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "UserForAuthenticationDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "keepLogin": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SignInWithTFACommand": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/UserForTFAAuthDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "requestId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "UserForTFAAuthDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "keepLogin": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ResponseOfTFASetupDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Response"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/TFASetupDto"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "TFASetupDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "isTfaEnabled": {
+            "type": "boolean"
+          },
+          "authenticatorKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "formattedKey": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "TFAEnableCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        }
+      },
+      "EncryptedDataRequestModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "plainText1": {
+            "type": "string",
+            "nullable": true
+          },
+          "plainText2": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "description": "Type into the textbox: Bearer {your JWT token}.",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "JWT": []
+    }
+  ]
+}

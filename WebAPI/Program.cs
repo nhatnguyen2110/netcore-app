@@ -3,6 +3,7 @@ using Application.Common.Interfaces;
 using Domain;
 using Infrastructure;
 using Infrastructure.Persistence;
+using Microsoft.AspNetCore.Mvc;
 using NLog;
 using NLog.Web;
 using WebAPI.Extensions;
@@ -29,7 +30,8 @@ try
     builder.Host.UseNLog();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.ConfigureIISIntegration();
+    builder.Services.AddSwaggerDocumentation(builder.Configuration);
     builder.Services.AddInfrastructureServices(builder.Configuration);
     builder.Services.AddApplicationServices(builder.Configuration);
     builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
@@ -38,13 +40,22 @@ try
     builder.Services.AddAuthentication();
     builder.Services.ConfigureJWT(builder.Configuration);
 
-    var app = builder.Build();
+    builder.Services.Configure<ApiBehaviorOptions>(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+    });
+    builder.Services.AddControllers(config =>
+    {
+        config.RespectBrowserAcceptHeader = true;
+        config.ReturnHttpNotAcceptable = true;
+    }).AddNewtonsoftJson()
+    .AddXmlDataContractSerializerFormatters();
 
+    var app = builder.Build();
+    app.UseSwaggerDocumentation(builder.Configuration);
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
         // Initialise and seed database
         using (var scope = app.Services.CreateScope())
         {
