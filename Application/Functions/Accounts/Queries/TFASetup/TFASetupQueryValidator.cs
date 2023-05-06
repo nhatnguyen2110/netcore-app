@@ -2,9 +2,9 @@
 
 namespace Application.Functions.Accounts.Queries.TFASetup
 {
-    public class TFASetupQueryValidator : AbstractValidator<TFASetupQuery>
+    public class TFASetupCommandValidator : AbstractValidator<TFASetupQuery>
     {
-        public TFASetupQueryValidator()
+        public TFASetupCommandValidator()
         {
             RuleFor(v => v.UserId)
             .NotEmpty();

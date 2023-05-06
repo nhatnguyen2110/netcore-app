@@ -14,7 +14,11 @@ namespace Application.Common.Interfaces
         Task<Result> DeleteUserAsync(string userId);
 
         Task<SignInResultDto> AuthorizeAsync(UserForAuthenticationDto userForAuth);
+        Task<SignInResultDto> AuthorizeTFAAsync(UserForTFAAuthDto userForTFAAuth);
+
         Task<Result> AssignToRoles(string userId, string[] roles);
         Task<TFASetupDto> GetTFASetupAsync(string userId);
+        Task EnableTFAAsync(string email, string code);
+        Task DisableTFAAsync(string email);
     }
 }

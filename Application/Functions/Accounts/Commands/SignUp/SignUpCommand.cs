@@ -1,7 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Models;
 using Application.Models.Account;
-using Application.Models.Settings;
 using Domain;
 using Domain.Enums;
 using MediatR;
@@ -15,15 +14,12 @@ namespace Application.Functions.Accounts.Commands.SignUp
     }
     public class SignUpCommandHandler : BaseHandler<SignUpCommand, Response<Unit>>
     {
-        private readonly ApplicationSettings _applicationSettings;
         private readonly IIdentityService _identityService;
         public SignUpCommandHandler(ICommonService commonService,
             ILogger<SignUpCommand> logger,
-            ApplicationSettings applicationSettings,
             IIdentityService identityService
             ) : base(commonService, logger)
         {
-            _applicationSettings = applicationSettings;
             _identityService = identityService;
         }
         public async override Task<Response<Unit>> Handle(SignUpCommand request, CancellationToken cancellationToken)

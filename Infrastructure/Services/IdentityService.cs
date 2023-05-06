@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Text.Encodings.Web;
 
 namespace Infrastructure.Services
 {
@@ -37,7 +36,7 @@ namespace Infrastructure.Services
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _signInManager= signInManager;
+            _signInManager = signInManager;
             _logger = logger;
             _configuration = configuration;
             _mapper = mapper;
@@ -49,7 +48,7 @@ namespace Infrastructure.Services
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
             if (user != null)
             {
-                await this.AssignToRoles(user,roles);
+                await this.AssignToRoles(user, roles);
                 return Result.Success();
             }
             return Result.Failure(new[] { "Invalid User Id" });
@@ -64,31 +63,91 @@ namespace Infrastructure.Services
             // use Cookies
             // var result = await _signInManager.PasswordSignInAsync(userForAuth.UserName, userForAuth.Password, userForAuth.KeepLogin, true);
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == userForAuth.UserName);
+
             if (user != null)
             {
-                var result = await _signInManager.CheckPasswordSignInAsync(user, userForAuth.Password, true);
-                if (result.Succeeded)
+                // var result = await _signInManager.CheckPasswordSignInAsync(user, userForAuth.Password, true);
+                // fix error: No authentication handler is registered for the scheme 'Identity.TwoFactorRememberMe'
+                if (await _userManager.IsLockedOutAsync(user))
                 {
+                    throw new Exception($"The account is locked out due to multiple login attempts in {(await _userManager.GetLockoutEndDateAsync(user)).Value.Subtract(DateTimeOffset.UtcNow).Minutes} minutes");
+                }
+                var result = await _userManager.CheckPasswordAsync(user, userForAuth.Password ?? "");
+                //if (result.Succeeded)
+                if (result)
+                {
+                    if (_userManager.SupportsUserLockout)
+                    {
+                        var accessFailedCount = await _userManager.GetAccessFailedCountAsync(user);
+                        if (accessFailedCount > 0)
+                            await _userManager.ResetAccessFailedCountAsync(user);
+                    }
+                    var isTfaEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
+                    if (isTfaEnabled)
+                    {
+                        return new SignInResultDto
+                        {
+                            IsAuthSuccessful = true,
+                            IsTFAEnabled = true
+                        };
+                    }
                     var roles = await _userManager.GetRolesAsync(user);
                     var jwtToken = _tokenService.CreateToken(user, roles, userForAuth.KeepLogin);
                     var data = new SignInResultDto
                     {
                         AccessToken = jwtToken,
-                        UserInfo = _mapper.Map<UserInfoDto>(user)
+                        UserInfo = _mapper.Map<UserInfoDto>(user),
+                        IsAuthSuccessful = true,
+                        IsTFAEnabled = false
                     };
+
                     user.LastLoginDate = DateTime.UtcNow;
                     await _userManager.UpdateAsync(user);
                     return data;
                 }
-                if (result.IsLockedOut)
+                else
                 {
-                    throw new Exception("The account is locked out");
+                    if (_userManager.SupportsUserLockout && await _userManager.GetLockoutEnabledAsync(user))
+                    {
+                        await _userManager.AccessFailedAsync(user);
+                    }
                 }
-            }
-            
-            throw new Exception("Invalid UserName or Password");
-        }
+                //if (result.IsLockedOut)
+                //{
 
+                //    throw new Exception($"The account is locked out due to multiple login attempts in {(await _userManager.GetLockoutEndDateAsync(user)).Value.Subtract(DateTimeOffset.UtcNow).Minutes} minutes");
+                //}
+            }
+
+            throw new Exception("Invalid Password");
+        }
+        public async Task<SignInResultDto> AuthorizeTFAAsync(UserForTFAAuthDto userForTFAAuth)
+        {
+#pragma warning disable CS8604 // Possible null reference argument.
+            var user = await _userManager.FindByNameAsync(userForTFAAuth.Email);
+#pragma warning restore CS8604 // Possible null reference argument.
+            if (user == null)
+                throw new Exception("Invalid Authentication");
+#pragma warning disable CS8604 // Possible null reference argument.
+            var validVerification = await _userManager.VerifyTwoFactorTokenAsync(
+                 user, _userManager.Options.Tokens.AuthenticatorTokenProvider, userForTFAAuth.Code);
+#pragma warning restore CS8604 // Possible null reference argument.
+            if (!validVerification)
+                throw new Exception("Invalid Token Verification");
+            var roles = await _userManager.GetRolesAsync(user);
+            var jwtToken = _tokenService.CreateToken(user, roles, userForTFAAuth.KeepLogin);
+            var data = new SignInResultDto
+            {
+                AccessToken = jwtToken,
+                UserInfo = _mapper.Map<UserInfoDto>(user),
+                IsAuthSuccessful = true,
+                IsTFAEnabled = true
+            };
+
+            user.LastLoginDate = DateTime.UtcNow;
+            await _userManager.UpdateAsync(user);
+            return data;
+        }
         public async Task<(Result Result, string UserId)> CreateUserAsync(UserForRegistrationDto userForRegistration, string[] roles)
         {
             var user = _mapper.Map<ApplicationUser>(userForRegistration);
@@ -100,7 +159,6 @@ namespace Infrastructure.Services
 
             return (result.ToApplicationResult(), user.Id);
         }
-
         public async Task<Result> DeleteUserAsync(string userId)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
@@ -118,13 +176,11 @@ namespace Infrastructure.Services
             var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
             return user.UserName;
         }
-
         public async Task<bool> IsInRoleAsync(string userId, string role)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
             return user != null && await _userManager.IsInRoleAsync(user, role);
         }
-
         public async Task<TFASetupDto> GetTFASetupAsync(string userId)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
@@ -153,5 +209,35 @@ namespace Infrastructure.Services
                 System.Web.HttpUtility.UrlEncode(email),
                 unformattedKey);
         }
+        public async Task EnableTFAAsync(string email, string code)
+        {
+            var user = await _userManager.FindByNameAsync(email);
+            if (user == null)
+            {
+                throw new Exception("User does not exist");
+            }
+            var isValidCode = await _userManager
+                .VerifyTwoFactorTokenAsync(user,
+                  _userManager.Options.Tokens.AuthenticatorTokenProvider,
+                  code);
+            if (isValidCode)
+            {
+                await _userManager.SetTwoFactorEnabledAsync(user, true);
+            }
+        }
+        public async Task DisableTFAAsync(string email)
+        {
+            var user = await _userManager.FindByNameAsync(email);
+            if (user == null)
+            {
+                throw new Exception("User does not exist");
+            }
+            else
+            {
+                await _userManager.SetTwoFactorEnabledAsync(user, false);
+            }
+        }
+
+
     }
 }
