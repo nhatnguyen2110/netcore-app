@@ -1,8 +1,10 @@
 ﻿using Application.Common.Interfaces;
 using Application.Functions.Accounts.Commands.ChangePassword;
+using Application.Functions.Accounts.Commands.ResetPassword;
 using Application.Functions.Accounts.Commands.SignIn;
 using Application.Functions.Accounts.Commands.SignUp;
 using Application.Functions.Accounts.Commands.TFASetup;
+using Application.Functions.Accounts.Queries.ResetPassword;
 using Application.Functions.Accounts.Queries.TFASetup;
 using Application.Models;
 using Application.Models.Account;
@@ -104,6 +106,32 @@ namespace WebAPI.Controllers
         [Authorize]
         [HttpPost("[action]")]
         public async Task<ActionResult<Response<Unit>>> ChangePassword(ChangePasswordCommand command)
+        {
+            var result = await Mediator.Send(command);
+            if (result.Succeeded)
+            {
+                return result;
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
+        [HttpPost("[action]")]
+        public async Task<ActionResult<Response<Unit>>> SendTokenToResetPassword(ResetPasswordQuery query)
+        {
+            var result = await Mediator.Send(query);
+            if (result.Succeeded)
+            {
+                return result;
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
+        [HttpPost("[action]")]
+        public async Task<ActionResult<Response<Unit>>> ResetPassword(ResetPasswordCommand command)
         {
             var result = await Mediator.Send(command);
             if (result.Succeeded)

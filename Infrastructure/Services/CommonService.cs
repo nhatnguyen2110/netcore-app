@@ -10,12 +10,14 @@ namespace Infrastructure.Services
         protected readonly IDateTimeService _dateTimeService;
         protected readonly IApplicationDbContext _applicationDbContext;
         protected readonly ICacheService _cacheService;
+        protected readonly IEmailService _emailService;
         public CommonService(
         IMapper mapper
         , ICurrentUserService currentUserService
         , IDateTimeService dateTimeService
         , IApplicationDbContext applicationDbContext
         , ICacheService cacheService
+        , IEmailService emailService
         )
         {
             _mapper = mapper;
@@ -23,6 +25,7 @@ namespace Infrastructure.Services
             _dateTimeService = dateTimeService;
             _applicationDbContext = applicationDbContext;
             _cacheService = cacheService;
+            _emailService = emailService;
         }
         public IMapper Mapper => _mapper;
 
@@ -33,5 +36,7 @@ namespace Infrastructure.Services
         public ICurrentUserService CurrentUserService => _currentUserService;
 
         public IDateTimeService DateTimeService => _dateTimeService;
+
+        public IEmailService EmailService => _emailService;
     }
 }

@@ -9,5 +9,6 @@ namespace Application.Common.Interfaces
         IApplicationDbContext ApplicationDBContext { get; }
         ICacheService CacheService { get; }
         ICurrentUserService CurrentUserService { get; }
+        IEmailService EmailService { get; }
     }
 }

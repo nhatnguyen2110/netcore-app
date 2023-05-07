@@ -31,6 +31,7 @@ namespace Infrastructure
             services.ConfigureIdentity();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IEmailService, EmailService>();
             return services;
         }
         public static void ConfigureIdentity(this IServiceCollection services)

@@ -244,7 +244,33 @@ namespace Infrastructure.Services
             {
                 throw new Exception("User does not exist");
             }
-            IdentityResult result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new Exception(string.Join(',', result.Errors.ToList().Select(x => x.Description)));
+            }
+        }
+        public async Task<UserForResetPasswordDto> GetTokenPasswordResetAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new Exception("User does not exist");
+            }
+            return new UserForResetPasswordDto()
+            {
+                UserId = user.Id,
+                Token = await _userManager.GeneratePasswordResetTokenAsync(user)
+            };
+        }
+        public async Task ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User does not exist");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
             if (!result.Succeeded)
             {
                 throw new Exception(string.Join(',', result.Errors.ToList().Select(x => x.Description)));
