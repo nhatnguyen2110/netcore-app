@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Functions.Accounts.Commands.ChangePassword;
 using Application.Functions.Accounts.Commands.SignIn;
 using Application.Functions.Accounts.Commands.SignUp;
 using Application.Functions.Accounts.Commands.TFASetup;
@@ -89,6 +90,20 @@ namespace WebAPI.Controllers
         [Authorize]
         [HttpDelete("tfa-setup")]
         public async Task<ActionResult<Response<Unit>>> DeleteTFASetup(TFAEnableCommand command)
+        {
+            var result = await Mediator.Send(command);
+            if (result.Succeeded)
+            {
+                return result;
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
+        [Authorize]
+        [HttpPost("[action]")]
+        public async Task<ActionResult<Response<Unit>>> ChangePassword(ChangePasswordCommand command)
         {
             var result = await Mediator.Send(command);
             if (result.Succeeded)

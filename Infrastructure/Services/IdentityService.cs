@@ -237,7 +237,18 @@ namespace Infrastructure.Services
                 await _userManager.SetTwoFactorEnabledAsync(user, false);
             }
         }
-
-
+        public async Task ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User does not exist");
+            }
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new Exception(string.Join(',', result.Errors.ToList().Select(x => x.Description)));
+            }
+        }
     }
 }

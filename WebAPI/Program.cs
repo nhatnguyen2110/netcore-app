@@ -44,12 +44,12 @@ try
     {
         options.SuppressModelStateInvalidFilter = true;
     });
-    builder.Services.AddControllers(config =>
-    {
-        config.RespectBrowserAcceptHeader = true;
-        config.ReturnHttpNotAcceptable = true;
-    }).AddNewtonsoftJson()
-    .AddXmlDataContractSerializerFormatters();
+    //builder.Services.AddControllers(config =>
+    //{
+    //    config.RespectBrowserAcceptHeader = true;
+    //    config.ReturnHttpNotAcceptable = true;
+    //}).AddNewtonsoftJson()
+    //.AddXmlDataContractSerializerFormatters();
 
     var app = builder.Build();
     app.UseSwaggerDocumentation(builder.Configuration);

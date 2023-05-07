@@ -20,5 +20,6 @@ namespace Application.Common.Interfaces
         Task<TFASetupDto> GetTFASetupAsync(string userId);
         Task EnableTFAAsync(string email, string code);
         Task DisableTFAAsync(string email);
+        Task ChangePasswordAsync(string userId, string currentPassword, string newPassword);
     }
 }
