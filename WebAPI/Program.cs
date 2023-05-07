@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using NLog;
 using NLog.Web;
 using WebAPI.Extensions;
+using WebAPI.Middlewares;
 using WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +40,7 @@ try
     builder.Services.ConfigureCors();
     builder.Services.AddAuthentication();
     builder.Services.ConfigureJWT(builder.Configuration);
+    builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
     builder.Services.Configure<ApiBehaviorOptions>(options =>
     {
@@ -64,7 +66,7 @@ try
             await initialiser.SeedAsync();
         }
     }
-
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseHttpsRedirection();
 
     app.UseStaticFiles();
