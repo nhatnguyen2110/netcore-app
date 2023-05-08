@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Security.Cryptography;
 
 namespace Infrastructure.Services
 {
@@ -92,15 +93,18 @@ namespace Infrastructure.Services
                         };
                     }
                     var roles = await _userManager.GetRolesAsync(user);
-                    var jwtToken = _tokenService.CreateToken(user, roles, userForAuth.KeepLogin);
-                    var data = new SignInResultDto
+                    var jwtToken = _tokenService.CreateToken(user, roles);
+					var refreshToken = GenerateRefreshToken();
+					var data = new SignInResultDto
                     {
                         AccessToken = jwtToken,
                         UserInfo = _mapper.Map<UserInfoDto>(user),
                         IsAuthSuccessful = true,
-                        IsTFAEnabled = false
+                        IsTFAEnabled = false,
+                        RefreshToken = refreshToken
                     };
-
+                    user.RefreshToken = refreshToken;
+                    user.RefreshTokenExpiryTime = DateTimeOffset.UtcNow.AddHours(userForAuth.KeepLogin ? int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720") : int.Parse(_configuration["JwtSettings:defaultRefreshTokenValidityInHours"] ?? "24"));
                     user.LastLoginDate = DateTime.UtcNow;
                     await _userManager.UpdateAsync(user);
                     return data;
@@ -135,16 +139,19 @@ namespace Infrastructure.Services
             if (!validVerification)
                 throw new Exception("Invalid Token Verification");
             var roles = await _userManager.GetRolesAsync(user);
-            var jwtToken = _tokenService.CreateToken(user, roles, userForTFAAuth.KeepLogin);
-            var data = new SignInResultDto
+            var jwtToken = _tokenService.CreateToken(user, roles);
+			var refreshToken = GenerateRefreshToken();
+			var data = new SignInResultDto
             {
                 AccessToken = jwtToken,
                 UserInfo = _mapper.Map<UserInfoDto>(user),
                 IsAuthSuccessful = true,
-                IsTFAEnabled = true
-            };
-
-            user.LastLoginDate = DateTime.UtcNow;
+                IsTFAEnabled = true,
+				RefreshToken = refreshToken
+			};
+			user.RefreshToken = refreshToken;
+			user.RefreshTokenExpiryTime = DateTimeOffset.UtcNow.AddHours(userForTFAAuth.KeepLogin ? int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720") : int.Parse(_configuration["JwtSettings:defaultRefreshTokenValidityInHours"] ?? "24"));
+			user.LastLoginDate = DateTime.UtcNow;
             await _userManager.UpdateAsync(user);
             return data;
         }
@@ -276,5 +283,41 @@ namespace Infrastructure.Services
                 throw new Exception(string.Join(',', result.Errors.ToList().Select(x => x.Description)));
             }
         }
-    }
+        private string GenerateRefreshToken()
+		{
+			var randomNumber = new byte[64];
+			using var rng = RandomNumberGenerator.Create();
+			rng.GetBytes(randomNumber);
+			return Convert.ToBase64String(randomNumber);
+		}
+		public async Task<AuthTokenDto> RefreshTokenAsync(string accessToken, string refreshToken)
+		{
+            var principal = _tokenService.DecryptTokenToClaim(accessToken, false);
+			if (principal == null)
+			{
+				throw new Exception("Invalid access token");
+			}
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+			var userId = principal.Identity.Name;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+			var user = await _userManager.FindByIdAsync(userId);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+			if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTimeOffset.UtcNow)
+			{
+				throw new Exception("Refresh token is invalid or expiry");
+			}
+			var roles = await _userManager.GetRolesAsync(user);
+            var newAccessToken = _tokenService.CreateToken(user, roles);
+			var newRefreshToken = GenerateRefreshToken();
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+            return new AuthTokenDto
+            {
+                RefreshToken = newRefreshToken,
+                AccessToken = newAccessToken
+            };
+		}
+	}
 }

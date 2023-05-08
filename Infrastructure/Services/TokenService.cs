@@ -16,11 +16,11 @@ namespace Infrastructure.Services
             _configuration = configuration;
         }
 
-        public string CreateToken(ApplicationUser user, IList<string> roles, bool keepLogin)
+        public string CreateToken(ApplicationUser user, IList<string> roles)
         {
             var signingCredentials = GetSigningCredentials();
             var claims =  GetClaims(user, roles);
-            var tokenOptions = GenerateTokenOptions(signingCredentials, claims, keepLogin);
+            var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
 
             return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         }
@@ -43,11 +43,11 @@ namespace Infrastructure.Services
             }
             return claims;
         }
-        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims, bool keepLogin = false)
+        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
-            var expireValue = int.Parse(jwtSettings.GetSection("expires").Value ?? "30");
-            var expires = keepLogin ? DateTime.Now.AddDays(30) : DateTime.Now.AddMinutes(expireValue);
+            var expireValue = int.Parse(jwtSettings.GetSection("tokenValidityInMinutes").Value ?? "5");
+            var expires = DateTime.Now.AddMinutes(expireValue);
             var tokenOptions = new JwtSecurityToken(
                 issuer: jwtSettings.GetSection("validIssuer").Value,
                 audience: jwtSettings.GetSection("validAudience").Value,

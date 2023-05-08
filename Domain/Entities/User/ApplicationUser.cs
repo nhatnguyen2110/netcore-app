@@ -7,5 +7,8 @@ namespace Domain.Entities.User
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public DateTime? LastLoginDate { get; set; }
-    }
+        public string? RefreshToken { get; set; }
+        public DateTimeOffset? RefreshTokenExpiryTime { get; set; }
+
+	}
 }

@@ -7,7 +7,7 @@ namespace Application.Common.Interfaces
     public interface ITokenService
     {
         ClaimsPrincipal DecryptTokenToClaim(string decrypt, bool validateLifetime = true);
-        string CreateToken(ApplicationUser user, IList<string> roles, bool keepLogin);
+        string CreateToken(ApplicationUser user, IList<string> roles);
 
     }
 }

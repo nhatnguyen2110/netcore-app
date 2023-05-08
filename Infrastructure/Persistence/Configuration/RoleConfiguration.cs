@@ -11,17 +11,20 @@ namespace Infrastructure.Persistence.Configuration
             builder.HasData(
                 new IdentityRole
                 {
-                    Name = "Administrator",
+					Id = "f0967a26-d5ba-41a8-92e5-747783c4cc07",
+					Name = "Administrator",
                     NormalizedName = "ADMINISTRATOR",
                 },
                 new IdentityRole
                 {
-                    Name = "Member",
+					Id = "052997d8-20f2-4089-b5e1-50b296461d51",
+					Name = "Member",
                     NormalizedName = "MEMBER"
                 },
                 new IdentityRole
                 {
-                    Name = "Guest",
+					Id = "d681023c-1441-4134-8253-f660cf26a716",
+					Name = "Guest",
                     NormalizedName = "GUEST"
                 }
                 );

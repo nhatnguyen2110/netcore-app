@@ -18,5 +18,6 @@ namespace Application.Common.Interfaces
         Task ChangePasswordAsync(string userId, string currentPassword, string newPassword);
         Task<UserForResetPasswordDto> GetTokenPasswordResetAsync(string email);
         Task ResetPasswordAsync(string userId, string token, string newPassword);
-    }
+		Task<AuthTokenDto> RefreshTokenAsync(string accessToken, string refreshToken);
+	}
 }

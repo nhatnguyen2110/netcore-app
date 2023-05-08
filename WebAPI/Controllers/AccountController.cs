@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Functions.Accounts.Commands.ChangePassword;
+using Application.Functions.Accounts.Commands.RefreshToken;
 using Application.Functions.Accounts.Commands.ResetPassword;
 using Application.Functions.Accounts.Commands.SignIn;
 using Application.Functions.Accounts.Commands.SignUp;
@@ -143,5 +144,18 @@ namespace WebAPI.Controllers
                 return BadRequest(result);
             }
         }
-    }
+		[HttpPost("[action]")]
+		public async Task<ActionResult<Response<AuthTokenDto>>> RefreshToken(RefreshTokenCommand command)
+		{
+			var result = await Mediator.Send(command);
+			if (result.Succeeded)
+			{
+				return result;
+			}
+			else
+			{
+				return BadRequest(result);
+			}
+		}
+	}
 }
