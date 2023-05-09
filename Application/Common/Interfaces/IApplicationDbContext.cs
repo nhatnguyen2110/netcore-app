@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Forms;
+﻿using Application.Common.DBSupports;
+using Domain.Entities.Forms;
 using Domain.Entities.Log;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,5 +10,6 @@ namespace Application.Common.Interfaces
         DbSet<FormData> FormDatas { get; }
         DbSet<AuditLog> AuditLogs { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-    }
+		DbSet<SPSingleValueQueryResultString> GetSingleValueQueryString { get; set; }
+	}
 }

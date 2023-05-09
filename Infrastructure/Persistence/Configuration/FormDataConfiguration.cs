@@ -14,7 +14,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 1,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "DBTable",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Table",
@@ -28,7 +28,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 2,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "DBColumn",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Type",
@@ -42,7 +42,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 3,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "Name",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Name",
@@ -56,7 +56,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 4,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "DefaultValue",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Default Value",
@@ -70,7 +70,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 5,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "Required",
                     EditorType = EditorTypes.checkbox.GetKeyName(),
                     Name = "Required",
@@ -84,7 +84,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 6,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "EditorType",
                     EditorType = EditorTypes.editor_type.GetKeyName(),
                     Name = "Type",
@@ -98,7 +98,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 7,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "MaxLength",
                     EditorType = EditorTypes.number.GetKeyName(),
                     Name = "Max Length",
@@ -114,7 +114,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 8,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "MinValue",
                     EditorType = EditorTypes.number.GetKeyName(),
                     Name = "Min Value",
@@ -130,7 +130,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 9,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "MaxValue",
                     EditorType = EditorTypes.number.GetKeyName(),
                     Name = "Max Value",
@@ -146,7 +146,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 10,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "SortOrder",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Sort Order",
@@ -160,7 +160,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 11,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "Tooltip",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Tooltip",
@@ -174,7 +174,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 12,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "Javascript",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Javascript",
@@ -188,7 +188,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 13,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "SourceEndpoint",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Source Endpoint",
@@ -202,7 +202,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 14,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "HttpMethod",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "HttpMethod",
@@ -216,7 +216,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 15,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "DataText",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Data Text",
@@ -230,7 +230,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 16,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "DataValue",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Data Value",
@@ -244,7 +244,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 17,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "Width",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Width",
@@ -258,7 +258,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 18,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "Height",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Height",
@@ -272,7 +272,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 19,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "ClassCSS",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Class CSS",
@@ -286,7 +286,7 @@ namespace Infrastructure.Persistence.Configuration
                 new FormData
                 {
                     Id = 20,
-                    DBTable = "FormData",
+                    DBTable = "FormDatas",
                     DBColumn = "PermissionRoles",
                     EditorType = EditorTypes.input.GetKeyName(),
                     Name = "Permission Roles",

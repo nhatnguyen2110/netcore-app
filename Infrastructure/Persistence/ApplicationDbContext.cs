@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.DBSupports;
+using Application.Common.Interfaces;
 using Domain.Entities.Forms;
 using Domain.Entities.Log;
 using Domain.Entities.User;
@@ -22,12 +23,14 @@ namespace Infrastructure.Persistence
         }
         public DbSet<FormData> FormDatas => Set<FormData>();
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+		public virtual DbSet<SPSingleValueQueryResultString> GetSingleValueQueryString { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+		protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+			builder.Entity<SPSingleValueQueryResultString>().HasNoKey();
 
-            base.OnModelCreating(builder);
+			base.OnModelCreating(builder);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

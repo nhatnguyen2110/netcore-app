@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Common\Exception\" />
-    <Folder Include="Functions\Form\" />
+    <Folder Include="Functions\FormDatas\Commands\" />
   </ItemGroup>
 
 </Project>
