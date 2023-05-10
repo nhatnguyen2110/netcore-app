@@ -221,7 +221,44 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResponseOfUnit"
+                  "$ref": "#/components/schemas/ResponseOfChangePasswordResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Account/ChangePasswordWithTFA": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_ChangePasswordWithTFA",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordWithTFACommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfChangePasswordResponseDto"
                 }
               }
             }
@@ -923,14 +960,44 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "email": {
-            "type": "string"
-          },
           "code": {
             "type": "string"
           },
           "requestId": {
             "type": "string"
+          }
+        }
+      },
+      "ResponseOfChangePasswordResponseDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Response"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ChangePasswordResponseDto"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "ChangePasswordResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "isPasswordChanged": {
+            "type": "boolean"
+          },
+          "isTFAEnabled": {
+            "type": "boolean"
           }
         }
       },
@@ -943,6 +1010,27 @@
             "nullable": true
           },
           "newPassword": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestId": {
+            "type": "string"
+          }
+        }
+      },
+      "ChangePasswordWithTFACommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "nullable": true
+          },
+          "newPassword": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
             "type": "string",
             "nullable": true
           },

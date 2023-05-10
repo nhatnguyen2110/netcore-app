@@ -7,7 +7,6 @@ namespace Application.Functions.Accounts.Commands.TFASetup
 {
     public class TFAEnableCommand : IRequest<Response<Unit>>
     {
-        public string Email { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
 
         public string requestId { get; set; } = Guid.NewGuid().ToString();
@@ -16,17 +15,22 @@ namespace Application.Functions.Accounts.Commands.TFASetup
 
     {
         private readonly IIdentityService _identityService;
+        private readonly ICurrentUserService _currentUserService;
         public TFAEnableCommandHandler(ICommonService commonService,
             ILogger<TFAEnableCommand> logger,
+            ICurrentUserService currentUserService,
             IIdentityService identityService) : base(commonService, logger)
         {
             _identityService = identityService;
+            _currentUserService = currentUserService;
         }
         public async override Task<Response<Unit>> Handle(TFAEnableCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                await _identityService.EnableTFAAsync(request.Email, request.Code);
+#pragma warning disable CS8604 // Possible null reference argument.
+                await _identityService.EnableTFAAsync(_currentUserService.Email, request.Code);
+#pragma warning restore CS8604 // Possible null reference argument.
                 return Response<Unit>.Success(Unit.Value, request.requestId);
             }
             catch (Exception ex)

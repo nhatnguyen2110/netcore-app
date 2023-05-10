@@ -106,7 +106,21 @@ namespace WebAPI.Controllers
         }
         [Authorize]
         [HttpPost("[action]")]
-        public async Task<ActionResult<Response<Unit>>> ChangePassword(ChangePasswordCommand command)
+        public async Task<ActionResult<Response<ChangePasswordResponseDto>>> ChangePassword(ChangePasswordCommand command)
+        {
+            var result = await Mediator.Send(command);
+            if (result.Succeeded)
+            {
+                return result;
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
+        [Authorize]
+        [HttpPost("[action]")]
+        public async Task<ActionResult<Response<ChangePasswordResponseDto>>> ChangePasswordWithTFA(ChangePasswordWithTFACommand command)
         {
             var result = await Mediator.Send(command);
             if (result.Succeeded)

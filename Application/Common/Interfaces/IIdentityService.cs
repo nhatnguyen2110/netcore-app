@@ -15,7 +15,8 @@ namespace Application.Common.Interfaces
         Task<TFASetupDto> GetTFASetupAsync(string userId);
         Task EnableTFAAsync(string email, string code);
         Task DisableTFAAsync(string email);
-        Task ChangePasswordAsync(string userId, string currentPassword, string newPassword);
+        Task<ChangePasswordResponseDto> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
+        Task<ChangePasswordResponseDto> ChangePasswordWithTFAAsync(string userId, string currentPassword, string newPassword, string code);
         Task<UserForResetPasswordDto> GetTokenPasswordResetAsync(string email);
         Task ResetPasswordAsync(string userId, string token, string newPassword);
 		Task<AuthTokenDto> RefreshTokenAsync(string accessToken, string refreshToken);

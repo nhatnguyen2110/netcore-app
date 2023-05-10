@@ -227,10 +227,11 @@ namespace Infrastructure.Services
                 .VerifyTwoFactorTokenAsync(user,
                   _userManager.Options.Tokens.AuthenticatorTokenProvider,
                   code);
-            if (isValidCode)
+            if (!isValidCode)
             {
-                await _userManager.SetTwoFactorEnabledAsync(user, true);
+                throw new Exception("Invalid Token Verification");
             }
+            await _userManager.SetTwoFactorEnabledAsync(user, true);
         }
         public async Task DisableTFAAsync(string email)
         {
@@ -242,19 +243,6 @@ namespace Infrastructure.Services
             else
             {
                 await _userManager.SetTwoFactorEnabledAsync(user, false);
-            }
-        }
-        public async Task ChangePasswordAsync(string userId, string currentPassword, string newPassword)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                throw new Exception("User does not exist");
-            }
-            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
-            if (!result.Succeeded)
-            {
-                throw new Exception(string.Join(',', result.Errors.ToList().Select(x => x.Description)));
             }
         }
         public async Task<UserForResetPasswordDto> GetTokenPasswordResetAsync(string email)
@@ -319,5 +307,56 @@ namespace Infrastructure.Services
                 AccessToken = newAccessToken
             };
 		}
-	}
+
+        public async Task<ChangePasswordResponseDto> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User does not exist");
+            }
+            var isTfaEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
+            if (isTfaEnabled)
+            {
+                return new ChangePasswordResponseDto
+                {
+                    IsPasswordChanged = false,
+                    IsTFAEnabled = true
+                };
+            }
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new Exception(string.Join(',', result.Errors.ToList().Select(x => x.Description)));
+            }
+            return new ChangePasswordResponseDto
+            {
+                IsPasswordChanged = true,
+                IsTFAEnabled = false
+            };
+        }
+
+        public async Task<ChangePasswordResponseDto> ChangePasswordWithTFAAsync(string userId, string currentPassword, string newPassword, string code)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User does not exist");
+            }
+            var validVerification = await _userManager.VerifyTwoFactorTokenAsync(
+                 user, _userManager.Options.Tokens.AuthenticatorTokenProvider, code);
+            if (!validVerification)
+                throw new Exception("Invalid Token Verification");
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new Exception(string.Join(',', result.Errors.ToList().Select(x => x.Description)));
+            }
+            return new ChangePasswordResponseDto
+            {
+                IsPasswordChanged = true,
+                IsTFAEnabled = true
+            };
+        }
+    }
 }

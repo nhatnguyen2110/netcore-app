@@ -6,8 +6,6 @@ namespace Application.Functions.Accounts.Commands.TFASetup
     {
         public TFAEnableCommandValidator()
         {
-            RuleFor(v => v.Email)
-            .NotEmpty();
             RuleFor(v => v.Code)
            .NotEmpty();
         }
