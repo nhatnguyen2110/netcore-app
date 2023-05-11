@@ -92,7 +92,7 @@ namespace WebAPI.Controllers
         }
         [Authorize]
         [HttpDelete("tfa-setup")]
-        public async Task<ActionResult<Response<Unit>>> DeleteTFASetup(TFAEnableCommand command)
+        public async Task<ActionResult<Response<Unit>>> DeleteTFASetup(TFADisableCommand command)
         {
             var result = await Mediator.Send(command);
             if (result.Succeeded)

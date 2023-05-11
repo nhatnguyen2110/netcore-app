@@ -216,9 +216,9 @@ namespace Infrastructure.Services
                 System.Web.HttpUtility.UrlEncode(email),
                 unformattedKey);
         }
-        public async Task EnableTFAAsync(string email, string code)
+        public async Task SetupTFAAsync(string userId, string code, bool isEnable)
         {
-            var user = await _userManager.FindByNameAsync(email);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 throw new Exception("User does not exist");
@@ -231,19 +231,7 @@ namespace Infrastructure.Services
             {
                 throw new Exception("Invalid Token Verification");
             }
-            await _userManager.SetTwoFactorEnabledAsync(user, true);
-        }
-        public async Task DisableTFAAsync(string email)
-        {
-            var user = await _userManager.FindByNameAsync(email);
-            if (user == null)
-            {
-                throw new Exception("User does not exist");
-            }
-            else
-            {
-                await _userManager.SetTwoFactorEnabledAsync(user, false);
-            }
+            await _userManager.SetTwoFactorEnabledAsync(user, isEnable);
         }
         public async Task<UserForResetPasswordDto> GetTokenPasswordResetAsync(string email)
         {

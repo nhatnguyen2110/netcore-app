@@ -13,8 +13,7 @@ namespace Application.Common.Interfaces
         Task<SignInResultDto> AuthorizeTFAAsync(UserForTFAAuthDto userForTFAAuth);
         Task<Result> AssignToRoles(string userId, string[] roles);
         Task<TFASetupDto> GetTFASetupAsync(string userId);
-        Task EnableTFAAsync(string email, string code);
-        Task DisableTFAAsync(string email);
+        Task SetupTFAAsync(string userId, string code, bool isEnable);
         Task<ChangePasswordResponseDto> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
         Task<ChangePasswordResponseDto> ChangePasswordWithTFAAsync(string userId, string currentPassword, string newPassword, string code);
         Task<UserForResetPasswordDto> GetTokenPasswordResetAsync(string email);

@@ -6,7 +6,7 @@ namespace Application.Functions.Accounts.Commands.TFASetup
     {
         public TFADisableCommandValidator()
         {
-            RuleFor(v => v.Email)
+            RuleFor(v => v.Code)
             .NotEmpty();
         }
     }

@@ -29,7 +29,7 @@ namespace Application.Functions.Accounts.Commands.TFASetup
             try
             {
 #pragma warning disable CS8604 // Possible null reference argument.
-                await _identityService.EnableTFAAsync(_currentUserService.Email, request.Code);
+                await _identityService.SetupTFAAsync(_currentUserService.Email, request.Code, true);
 #pragma warning restore CS8604 // Possible null reference argument.
                 return Response<Unit>.Success(Unit.Value, request.requestId);
             }

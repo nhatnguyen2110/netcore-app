@@ -171,7 +171,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TFAEnableCommand"
+                "$ref": "#/components/schemas/TFADisableCommand"
               }
             }
           },
@@ -957,6 +957,18 @@
         }
       },
       "TFAEnableCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          }
+        }
+      },
+      "TFADisableCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
