@@ -295,7 +295,6 @@ namespace Infrastructure.Services
                 AccessToken = newAccessToken
             };
 		}
-
         public async Task<ChangePasswordResponseDto> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -323,7 +322,6 @@ namespace Infrastructure.Services
                 IsTFAEnabled = false
             };
         }
-
         public async Task<ChangePasswordResponseDto> ChangePasswordWithTFAAsync(string userId, string currentPassword, string newPassword, string code)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -345,6 +343,59 @@ namespace Infrastructure.Services
                 IsPasswordChanged = true,
                 IsTFAEnabled = true
             };
+        }
+        public async Task<SignInResultDto> GoogleLoginAsync(ExternalAuthDto externalAuth)
+        {
+#pragma warning disable CS8604 // Possible null reference argument.
+            var payload = await _tokenService.VerifyGoogleTokenAsync(externalAuth.IdToken);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+            if (payload == null)
+                throw new Exception("Invalid External Authentication.");
+#pragma warning disable CS8604 // Possible null reference argument.
+            var info = new UserLoginInfo(externalAuth.Provider, payload.Subject, externalAuth.Provider);
+#pragma warning restore CS8604 // Possible null reference argument.
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(payload.Email);
+                if (user == null)
+                {
+                    user = new ApplicationUser { Email = payload.Email, UserName = payload.Email, FirstName = payload.GivenName, LastName = payload.FamilyName };
+                    await _userManager.CreateAsync(user);
+                    //prepare and send an email for the email confirmation
+                    await _userManager.AddToRoleAsync(user, RoleList.Member.ToString());
+                    await _userManager.AddLoginAsync(user, info);
+                }
+                else
+                {
+                    await _userManager.AddLoginAsync(user, info);
+                }
+            }
+            // should we check for the Locked out account???
+            
+            var roles = await _userManager.GetRolesAsync(user);
+            var jwtToken = _tokenService.CreateToken(user, roles);
+            var refreshToken = GenerateRefreshToken();
+            var data = new SignInResultDto
+            {
+                AccessToken = jwtToken,
+                UserInfo = _mapper.Map<UserInfoDto>(user),
+                IsAuthSuccessful = true,
+                RefreshToken = refreshToken
+            };
+            user.RefreshToken = refreshToken;
+            if (payload.ExpirationTimeSeconds.HasValue)
+            {
+                user.RefreshTokenExpiryTime = DateTimeOffset.UtcNow.AddSeconds(payload.ExpirationTimeSeconds.Value);
+            }
+            else
+            {
+                user.RefreshTokenExpiryTime = DateTimeOffset.UtcNow.AddHours(int.Parse(_configuration["JwtSettings:defaultRefreshTokenValidityInHours"] ?? "24"));
+            }
+            user.LastLoginDate = DateTime.UtcNow;
+            await _userManager.UpdateAsync(user);
+            return data;
         }
     }
 }

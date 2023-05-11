@@ -28,13 +28,13 @@ namespace Infrastructure
             //services.AddSingleton<ICacheService, RedisCacheService>();
             services.AddTransient<IDateTimeService, DateTimeService>();
             services.AddScoped<ICommonService, CommonService>();
-            services.ConfigureIdentity();
+            services.ConfigureIdentity(configuration);
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IEmailService, EmailService>();
             return services;
         }
-        public static void ConfigureIdentity(this IServiceCollection services)
+        public static void ConfigureIdentity(this IServiceCollection services, IConfiguration configuration)
         {
             var builder = services.AddIdentityCore<ApplicationUser>(o =>
             {
@@ -44,6 +44,9 @@ namespace Infrastructure
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequiredLength = 10;
                 o.User.RequireUniqueEmail = true;
+                o.Lockout.AllowedForNewUsers= true;
+                o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(int.Parse(configuration["ApplicationSettings:LockoutDurationInMinutes"] ?? "5"));
+                o.Lockout.MaxFailedAccessAttempts = int.Parse(configuration["ApplicationSettings:MaxLoginFailedCount"] ?? "5");
             })
             .AddRoles<IdentityRole>()
             .AddSignInManager()

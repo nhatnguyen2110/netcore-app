@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Entities.User;
+using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -77,6 +78,17 @@ namespace Infrastructure.Services
             var handler = new JwtSecurityTokenHandler();
             handler.InboundClaimTypeMap.Clear();
             return handler.ValidateToken(tokenString, tokenValidationParameters, out validatedToken);
+        }
+        public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleTokenAsync(string token)
+        {
+#pragma warning disable CS8604 // Possible null reference argument.
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new List<string>() { _configuration["Authentication:Google:ClientId"] }
+            };
+#pragma warning restore CS8604 // Possible null reference argument.
+            var payload = await GoogleJsonWebSignature.ValidateAsync(token, settings);
+            return payload;
         }
     }
 }

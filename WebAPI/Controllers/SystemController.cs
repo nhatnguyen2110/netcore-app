@@ -10,9 +10,11 @@ namespace WebAPI.Controllers
     public class SystemController : ApiControllerBase
     {
         private readonly ApplicationSettings _applicationSettings;
-        public SystemController(ApplicationSettings applicationSettings)
+        private readonly IConfiguration _configuration;
+        public SystemController(ApplicationSettings applicationSettings, IConfiguration configuration)
         {
             _applicationSettings = applicationSettings;
+            _configuration = configuration;
         }
         [HttpPost("[action]")]
         public IActionResult RSAEncryptData([FromBody] EncryptedDataRequestModel request)
@@ -39,7 +41,8 @@ namespace WebAPI.Controllers
                         EncryptPublicKeyEncode = _applicationSettings.PublicKeyEncode,
                         EnableEncryptAuthorize = _applicationSettings.EnableEncryptAuthorize,
                         EnableGoogleReCaptcha = _applicationSettings.EnableGoogleReCaptcha,
-                        GoogleSiteKey = _applicationSettings.GoogleSiteKey
+                        GoogleSiteKey = _applicationSettings.GoogleSiteKey,
+                        GoogleAuthClientId = _configuration["Authentication:Google:ClientId"],
                     }
                     )
                 );
