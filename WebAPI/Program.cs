@@ -75,6 +75,7 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
+    app.UseAddSecurityHeaders(app.Configuration);
     app.UseRateLimiter();
     app.Run();
 }
