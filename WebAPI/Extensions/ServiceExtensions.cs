@@ -1,10 +1,12 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using System.Text;
+using System.Threading.RateLimiting;
 
 namespace WebAPI.Extensions
 {
@@ -103,6 +105,19 @@ namespace WebAPI.Extensions
                 //opt.Conventions.Controller<CompaniesController>().HasApiVersion(new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0));
                 //opt.Conventions.Controller<CompaniesV2Controller>().HasApiVersion(new Microsoft.AspNetCore.Mvc.ApiVersion(2, 0));
 
+            });
+        }
+        public static void ConfigureRateLimiter(this IServiceCollection services, IConfiguration configuration)
+        {
+            //Window Rate Limiter
+            services.AddRateLimiter(options => {
+                options.RejectionStatusCode = 429;
+                options.AddFixedWindowLimiter("Fixed", opt => {
+                    opt.Window = TimeSpan.FromSeconds(int.Parse(configuration["WindowRateLimiter:WindowBySeconds"]??"60"));
+                    opt.PermitLimit = int.Parse(configuration["WindowRateLimiter:PermitLimit"] ?? "10000");
+                    opt.QueueLimit = int.Parse(configuration["WindowRateLimiter:QueueLimit"] ?? "10");
+                    opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                });
             });
         }
     }

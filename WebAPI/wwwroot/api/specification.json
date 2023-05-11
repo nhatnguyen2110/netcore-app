@@ -662,6 +662,27 @@
           }
         }
       }
+    },
+    "/api/System/GetConfigs": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "operationId": "System_GetConfigs",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

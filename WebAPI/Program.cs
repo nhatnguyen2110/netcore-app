@@ -21,8 +21,6 @@ var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurre
 logger.Debug("init main");
 try
 {
-
-
     // Add services to the container.
 
     builder.Services.AddControllers();
@@ -41,6 +39,7 @@ try
     builder.Services.AddAuthentication();
     builder.Services.ConfigureJWT(builder.Configuration);
     builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+    builder.Services.ConfigureRateLimiter(builder.Configuration);
 
     builder.Services.Configure<ApiBehaviorOptions>(options =>
     {
@@ -76,7 +75,7 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
-
+    app.UseRateLimiter();
     app.Run();
 }
 catch (Exception exception)

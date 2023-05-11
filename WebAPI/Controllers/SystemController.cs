@@ -29,5 +29,20 @@ namespace WebAPI.Controllers
                 );
 #pragma warning restore CS8604 // Possible null reference argument.
         }
+        [HttpGet("[action]")]
+        public IActionResult GetConfigs()
+        {
+            return Ok(
+                Response<object>.Success(
+                    new
+                    {
+                        EncryptPublicKeyEncode = _applicationSettings.PublicKeyEncode,
+                        EnableEncryptAuthorize = _applicationSettings.EnableEncryptAuthorize,
+                        EnableGoogleReCaptcha = _applicationSettings.EnableGoogleReCaptcha,
+                        GoogleSiteKey = _applicationSettings.GoogleSiteKey
+                    }
+                    )
+                );
+        }
     }
 }
