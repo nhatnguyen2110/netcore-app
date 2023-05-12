@@ -367,6 +367,38 @@
         }
       }
     },
+    "/api/Account/ExternalLogin": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "Account_ExternalLogin",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalLoginCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfSignInResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Cache/ClearAll": {
       "delete": {
         "tags": [
@@ -1141,6 +1173,36 @@
           },
           "requestId": {
             "type": "string"
+          }
+        }
+      },
+      "ExternalLoginCommand": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ExternalAuthDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "requestId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ExternalAuthDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "type": "string",
+            "nullable": true
+          },
+          "idToken": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
