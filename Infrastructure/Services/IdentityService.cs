@@ -54,7 +54,6 @@ namespace Infrastructure.Services
             }
             return Result.Failure(new[] { "Invalid User Id" });
         }
-
         private async Task AssignToRoles(ApplicationUser user, string[] roles)
         {
             await _userManager.AddToRolesAsync(user, new[] { RoleList.Member.ToString() });
@@ -92,21 +91,7 @@ namespace Infrastructure.Services
                             IsTFAEnabled = true
                         };
                     }
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var jwtToken = _tokenService.CreateToken(user, roles);
-					var refreshToken = GenerateRefreshToken();
-					var data = new SignInResultDto
-                    {
-                        AccessToken = jwtToken,
-                        UserInfo = _mapper.Map<UserInfoDto>(user),
-                        IsAuthSuccessful = true,
-                        IsTFAEnabled = false,
-                        RefreshToken = refreshToken
-                    };
-                    user.RefreshToken = refreshToken;
-                    user.RefreshTokenExpiryTime = DateTimeOffset.UtcNow.AddHours(userForAuth.KeepLogin ? int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720") : int.Parse(_configuration["JwtSettings:defaultRefreshTokenValidityInHours"] ?? "24"));
-                    user.LastLoginDate = DateTime.UtcNow;
-                    await _userManager.UpdateAsync(user);
+                    var data = await this.GetSignInResult(user, isTfaEnabled, userForAuth.KeepLogin ? int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720") : int.Parse(_configuration["JwtSettings:defaultRefreshTokenValidityInHours"] ?? "24"));
                     return data;
                 }
                 else
@@ -138,21 +123,8 @@ namespace Infrastructure.Services
 #pragma warning restore CS8604 // Possible null reference argument.
             if (!validVerification)
                 throw new Exception("Invalid Token Verification");
-            var roles = await _userManager.GetRolesAsync(user);
-            var jwtToken = _tokenService.CreateToken(user, roles);
-			var refreshToken = GenerateRefreshToken();
-			var data = new SignInResultDto
-            {
-                AccessToken = jwtToken,
-                UserInfo = _mapper.Map<UserInfoDto>(user),
-                IsAuthSuccessful = true,
-                IsTFAEnabled = true,
-				RefreshToken = refreshToken
-			};
-			user.RefreshToken = refreshToken;
-			user.RefreshTokenExpiryTime = DateTimeOffset.UtcNow.AddHours(userForTFAAuth.KeepLogin ? int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720") : int.Parse(_configuration["JwtSettings:defaultRefreshTokenValidityInHours"] ?? "24"));
-			user.LastLoginDate = DateTime.UtcNow;
-            await _userManager.UpdateAsync(user);
+            var data = await this.GetSignInResult(user, true, userForTFAAuth.KeepLogin ? int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720") : int.Parse(_configuration["JwtSettings:defaultRefreshTokenValidityInHours"] ?? "24"));
+            
             return data;
         }
         public async Task<(Result Result, string UserId)> CreateUserAsync(UserForRegistrationDto userForRegistration, string[] roles)
@@ -373,7 +345,43 @@ namespace Infrastructure.Services
                 }
             }
             // should we check for the Locked out account???
-            
+            var data = await this.GetSignInResult(user, false, int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720"));
+            return data;
+        }
+        public async Task<SignInResultDto> FacebookLoginAsync(ExternalAuthDto externalAuth)
+        {
+#pragma warning disable CS8604 // Possible null reference argument.
+            var payload = await _tokenService.VerifyFacebookTokenAsync(externalAuth.IdToken);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+            if (payload == null)
+                throw new Exception("Invalid External Authentication.");
+#pragma warning disable CS8604 // Possible null reference argument.
+            var info = new UserLoginInfo(externalAuth.Provider, payload.Id, externalAuth.Provider);
+#pragma warning restore CS8604 // Possible null reference argument.
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(payload.Email ?? "");
+                if (user == null)
+                {
+                    user = new ApplicationUser { Email = payload.Email, UserName = payload.Email, FirstName = payload.FirstName, LastName = payload.LastName };
+                    await _userManager.CreateAsync(user);
+                    //prepare and send an email for the email confirmation
+                    await _userManager.AddToRoleAsync(user, RoleList.Member.ToString());
+                    await _userManager.AddLoginAsync(user, info);
+                }
+                else
+                {
+                    await _userManager.AddLoginAsync(user, info);
+                }
+            }
+            // should we check for the Locked out account???
+            var data = await this.GetSignInResult(user, false, int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720"));
+            return data;
+        }
+        private async Task<SignInResultDto> GetSignInResult(ApplicationUser user, bool isTFAEnable, double refreshTokenExpireInHours)
+        {
             var roles = await _userManager.GetRolesAsync(user);
             var jwtToken = _tokenService.CreateToken(user, roles);
             var refreshToken = GenerateRefreshToken();
@@ -382,17 +390,11 @@ namespace Infrastructure.Services
                 AccessToken = jwtToken,
                 UserInfo = _mapper.Map<UserInfoDto>(user),
                 IsAuthSuccessful = true,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                IsTFAEnabled = isTFAEnable,
             };
             user.RefreshToken = refreshToken;
-            if (payload.ExpirationTimeSeconds.HasValue)
-            {
-                user.RefreshTokenExpiryTime = DateTimeOffset.UtcNow.AddSeconds(payload.ExpirationTimeSeconds.Value);
-            }
-            else
-            {
-                user.RefreshTokenExpiryTime = DateTimeOffset.UtcNow.AddHours(int.Parse(_configuration["JwtSettings:defaultRefreshTokenValidityInHours"] ?? "24"));
-            }
+            user.RefreshTokenExpiryTime = DateTimeOffset.UtcNow.AddHours(refreshTokenExpireInHours);
             user.LastLoginDate = DateTime.UtcNow;
             await _userManager.UpdateAsync(user);
             return data;

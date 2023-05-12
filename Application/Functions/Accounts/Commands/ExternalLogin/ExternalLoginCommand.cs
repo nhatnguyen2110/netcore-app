@@ -29,6 +29,8 @@ namespace Application.Functions.Accounts.Commands.ExternalLogin
                 {
                     case "GOOGLE":
                         return Response<SignInResultDto>.Success(await _identityService.GoogleLoginAsync(request), request.requestId);
+                    case "FACEBOOK":
+                        return Response<SignInResultDto>.Success(await _identityService.FacebookLoginAsync(request), request.requestId);
                     default:
                         throw new Exception("Invalid Provider");
                 }

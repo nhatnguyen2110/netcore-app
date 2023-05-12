@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SocialNetworkAPI;
 
 namespace Infrastructure
 {
@@ -32,6 +33,7 @@ namespace Infrastructure
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddSocialNetworkAPI(configuration);
             return services;
         }
         public static void ConfigureIdentity(this IServiceCollection services, IConfiguration configuration)

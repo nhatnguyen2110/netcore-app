@@ -3,6 +3,8 @@ using Domain.Entities.User;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SocialNetworkAPI;
+using SocialNetworkAPI.FacebookJsonWeb;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,9 +14,13 @@ namespace Infrastructure.Services
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
-        public TokenService(IConfiguration configuration)
+        private readonly ISocialNetworkClient _socialNetworkClient;
+        public TokenService(IConfiguration configuration,
+            ISocialNetworkClient socialNetworkClient
+            )
         {
             _configuration = configuration;
+            _socialNetworkClient = socialNetworkClient;
         }
 
         public string CreateToken(ApplicationUser user, IList<string> roles)
@@ -88,6 +94,12 @@ namespace Infrastructure.Services
             };
 #pragma warning restore CS8604 // Possible null reference argument.
             var payload = await GoogleJsonWebSignature.ValidateAsync(token, settings);
+            return payload;
+        }
+
+        public async Task<Payload> VerifyFacebookTokenAsync(string token)
+        {
+            var payload = await _socialNetworkClient.VerifyFacebookTokenAsync(token);
             return payload;
         }
     }
