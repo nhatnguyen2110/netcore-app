@@ -662,6 +662,87 @@
         ]
       }
     },
+    "/api/FormData/submit-insert/{tableName}": {
+      "post": {
+        "tags": [
+          "FormData"
+        ],
+        "operationId": "FormData_SubmitInsert",
+        "parameters": [
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfString"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/FormData/submit-update/{tableName}/{parentId}": {
+      "post": {
+        "tags": [
+          "FormData"
+        ],
+        "operationId": "FormData_SubmitUpdate",
+        "parameters": [
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "parentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfUnit"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/System/RSAEncryptData": {
       "post": {
         "tags": [
@@ -1438,6 +1519,23 @@
                     }
                   ]
                 }
+              }
+            }
+          }
+        ]
+      },
+      "ResponseOfString": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Response"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "type": "string",
+                "nullable": true
               }
             }
           }

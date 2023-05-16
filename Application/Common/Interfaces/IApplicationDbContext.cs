@@ -11,6 +11,6 @@ namespace Application.Common.Interfaces
         DbSet<AuditLog> AuditLogs { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 		DbSet<SPSingleValueQueryResultString> GetSingleValueQueryString { get; set; }
-        DbSet<SPColumnTypes> SPColumnTypes { get; set; }
+        DbSet<SPColumnTypes> GetSPColumnTypes { get; set; }
     }
 }

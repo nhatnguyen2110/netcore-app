@@ -296,6 +296,20 @@ namespace Infrastructure.Persistence.Configuration
                     PermissionRoles = "Administrator",
                     Tooltip = "roles are seperated by comma",
                     Deleted = false
+                },
+                new FormData
+                {
+                    Id = 21,
+                    DBTable = "FormDatas",
+                    DBColumn = "Deleted",
+                    EditorType = EditorTypes.checkbox.GetKeyName(),
+                    Name = "Deleted",
+                    Required = true,
+                    SortOrder = 21,
+                    PermissionRoles = "Administrator",
+                    Tooltip = "set true as deleted",
+                    Deleted = false,
+                    DefaultValue = "0"
                 }
                 );
         }

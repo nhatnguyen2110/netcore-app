@@ -10,16 +10,6 @@ namespace Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "GetSingleValueQueryString",
-                columns: table => new
-                {
-                    val = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                });
-
             migrationBuilder.UpdateData(
                 table: "FormDatas",
                 keyColumn: "Id",

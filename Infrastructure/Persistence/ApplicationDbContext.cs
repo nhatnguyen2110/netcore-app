@@ -24,13 +24,13 @@ namespace Infrastructure.Persistence
         public DbSet<FormData> FormDatas => Set<FormData>();
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 		public virtual DbSet<SPSingleValueQueryResultString> GetSingleValueQueryString { get; set; }
-        public virtual DbSet<SPColumnTypes> SPColumnTypes { get; set; }
+        public virtual DbSet<SPColumnTypes> GetSPColumnTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-			builder.Entity<SPSingleValueQueryResultString>().HasNoKey();
-            builder.Entity<SPColumnTypes>().HasNoKey();
+			builder.Entity<SPSingleValueQueryResultString>().HasNoKey().ToTable(nameof(SPSingleValueQueryResultString), t => t.ExcludeFromMigrations());
+            builder.Entity<SPColumnTypes>().HasNoKey().ToTable(nameof(SPColumnTypes), t => t.ExcludeFromMigrations());
 
             base.OnModelCreating(builder);
         }

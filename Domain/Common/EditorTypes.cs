@@ -22,6 +22,8 @@ namespace Domain.Common
         public static readonly EditorType editor_type = new EditorType("EDITOR_TYPE", "Type of field");
         public static readonly EditorType datetime_utc = new EditorType("DATETIME_UTC", "Date and Time UTC entry");
         public static readonly EditorType number = new EditorType("NUMBER", "A Number entry");
+        public static readonly EditorType guid_readonly = new EditorType("GUID_READONLY", "readonly GUID field");
+        public static readonly EditorType guid_hidden = new EditorType("GUID_HIDDEN", "hidden GUID field");
 
         public static List<EditorType> GetAllTypes()
         {
