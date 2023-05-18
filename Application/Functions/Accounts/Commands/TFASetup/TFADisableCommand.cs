@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Models;
+using Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -35,7 +36,7 @@ namespace Application.Functions.Accounts.Commands.TFASetup
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to setup. Request: {Name} {@Request}", typeof(TFAEnableCommand).Name, request);
-                return new Response<Unit>(false, ex.Message, ex.Message, "Failed to setup", request.requestId);
+                return new Response<Unit>(false, Constants.GeneralErrorMessage, ex.Message, "Failed to setup", request.requestId);
             }
         }
     }

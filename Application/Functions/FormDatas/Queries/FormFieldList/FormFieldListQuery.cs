@@ -3,6 +3,7 @@ using Application.Common.Mappings;
 using Application.Models;
 using Application.Models.Form;
 using AutoMapper.QueryableExtensions;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -39,7 +40,7 @@ namespace Application.Functions.FormDatas.Queries.FormFieldList
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "Failed to load. Request: {Name} {@Request}", typeof(FormFieldListQuery).Name, request);
-				return new Response<PaginatedList<FormFieldDto>>(false, ex.Message, ex.Message, "Failed to load", request.requestId);
+				return new Response<PaginatedList<FormFieldDto>>(false, Constants.GeneralErrorMessage, ex.Message, "Failed to load", request.requestId);
 			}
 		}
 	}

@@ -2,6 +2,7 @@
 using Application.Common.Mappings;
 using Application.Models;
 using Application.Models.Form;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -45,7 +46,7 @@ namespace Application.Functions.FormDatas.Queries.FormList
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "Failed to load. Request: {Name} {@Request}", typeof(FormListQuery).Name, request);
-				return new Response<PaginatedList<FormDBTableDto>>(false, ex.Message, ex.Message, "Failed to load", request.requestId);
+				return new Response<PaginatedList<FormDBTableDto>>(false, Constants.GeneralErrorMessage, ex.Message, "Failed to load", request.requestId);
 			}
 		}
 	}

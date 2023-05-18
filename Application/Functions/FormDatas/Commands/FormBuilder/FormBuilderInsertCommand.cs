@@ -1,6 +1,7 @@
 ﻿using Application.Common.DBSupports;
 using Application.Common.Interfaces;
 using Application.Models;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -61,7 +62,7 @@ namespace Application.Functions.FormDatas.Commands.FormBuilder
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to insert. Request: {Name} {@Request}", typeof(FormBuilderInsertCommand).Name, request);
-                return new Response<string>(false, ex.Message, ex.Message, "Failed to insert", request.requestId);
+                return new Response<string>(false, Constants.GeneralErrorMessage, ex.Message, "Failed to insert", request.requestId);
             }
         }
         private async Task<bool> IsUserInRoles(string userId, string strRoles)

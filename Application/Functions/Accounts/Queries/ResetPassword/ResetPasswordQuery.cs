@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Application.Models;
 using Application.Models.Settings;
+using Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Web;
@@ -42,7 +43,7 @@ namespace Application.Functions.Accounts.Queries.ResetPassword
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to load. Request: {Name} {@Request}", typeof(ResetPasswordQuery).Name, request);
-                return new Response<Unit>(false, ex.Message, ex.Message, "Failed to load", request.requestId);
+                return new Response<Unit>(false, Constants.GeneralErrorMessage, ex.Message, "Failed to load", request.requestId);
             }
         }
     }

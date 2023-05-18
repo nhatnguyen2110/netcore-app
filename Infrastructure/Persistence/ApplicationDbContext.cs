@@ -2,6 +2,7 @@
 using Application.Common.Interfaces;
 using Domain.Entities.Forms;
 using Domain.Entities.Log;
+using Domain.Entities.Notifications;
 using Domain.Entities.User;
 using Infrastructure.Persistence.Interceptors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace Infrastructure.Persistence
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 		public virtual DbSet<SPSingleValueQueryResultString> GetSingleValueQueryString { get; set; }
         public virtual DbSet<SPColumnTypes> GetSPColumnTypes { get; set; }
+        public DbSet<Device> Devices => Set<Device>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

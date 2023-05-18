@@ -13,8 +13,8 @@ This is a solution template for creating an ASP.NET Core following the principle
 * [AutoMapper](https://automapper.org/)
 * [FluentValidation](https://fluentvalidation.net/)
 * [Google Recaptcha](https://www.google.com/recaptcha/about/)
-* Redis Cache(https://redis.io/)
-
+* [Redis Cache](https://redis.io/)
+* [Web Push Notification] (https://github.com/web-push-libs/web-push-csharp)
 
 ## Getting Started
 

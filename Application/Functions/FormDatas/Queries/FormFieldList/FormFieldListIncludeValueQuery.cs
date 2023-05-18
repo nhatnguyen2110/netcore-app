@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Application.Models;
 using Application.Models.Form;
+using Domain;
 using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +66,7 @@ namespace Application.Functions.FormDatas.Queries.FormFieldList
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "Failed to load. Request: {Name} {@Request}", typeof(FormFieldListIncludeValueQuery).Name, request);
-				return new Response<List<FormFieldDto>>(false, ex.Message, ex.Message, "Failed to load", request.requestId);
+				return new Response<List<FormFieldDto>>(false, Constants.GeneralErrorMessage, ex.Message, "Failed to load", request.requestId);
 			}
 		}
 		private async Task<bool> IsCurrentUserInRoles(string roles)

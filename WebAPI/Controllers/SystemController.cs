@@ -43,6 +43,7 @@ namespace WebAPI.Controllers
                         EnableGoogleReCaptcha = _applicationSettings.EnableGoogleReCaptcha,
                         GoogleSiteKey = _applicationSettings.GoogleSiteKey,
                         GoogleAuthClientId = _configuration["Authentication:Google:ClientId"],
+                        VapidPublicKey = _configuration["Authentication:PublicKey"],
                     }
                     )
                 );

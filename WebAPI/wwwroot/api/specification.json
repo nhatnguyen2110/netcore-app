@@ -465,6 +465,163 @@
         ]
       }
     },
+    "/api/Device/List": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "operationId": "Device_List",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfPaginatedListOfDeviceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Device/Create": {
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "operationId": "Device_Create",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceCreateCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfInteger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Device/DeleteUserDevices": {
+      "delete": {
+        "tags": [
+          "Device"
+        ],
+        "operationId": "Device_DeleteUserDevices",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfUnit"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Device/Delete": {
+      "delete": {
+        "tags": [
+          "Device"
+        ],
+        "operationId": "Device_Delete",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "requestId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfUnit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/FormData/GetFormList": {
       "get": {
         "tags": [
@@ -724,6 +881,43 @@
             "x-position": 2
           }
         ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseOfUnit"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Notification/WebPush": {
+      "post": {
+        "tags": [
+          "Notification"
+        ],
+        "operationId": "Notification_WebPush",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebPushCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -1287,6 +1481,125 @@
           }
         }
       },
+      "ResponseOfPaginatedListOfDeviceDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Response"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PaginatedListOfDeviceDto"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "PaginatedListOfDeviceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceDto"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DeviceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "pushEndpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "pushP256DH": {
+            "type": "string",
+            "nullable": true
+          },
+          "pushAuth": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ResponseOfInteger": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Response"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "data": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ]
+      },
+      "DeviceCreateCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "userId": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "pushEndpoint": {
+            "type": "string",
+            "nullable": true
+          },
+          "pushP256DH": {
+            "type": "string",
+            "nullable": true
+          },
+          "pushAuth": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestId": {
+            "type": "string"
+          }
+        }
+      },
       "ResponseOfPaginatedListOfFormDBTableDto": {
         "allOf": [
           {
@@ -1540,6 +1853,23 @@
             }
           }
         ]
+      },
+      "WebPushCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "payload": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestId": {
+            "type": "string"
+          }
+        }
       },
       "EncryptedDataRequestModel": {
         "type": "object",

@@ -11,6 +11,7 @@ using Application.Functions.Accounts.Commands.SignIn;
 using Application.Models.Settings;
 using Domain.Common;
 using Microsoft.Extensions.Logging;
+using Domain;
 
 namespace Application.Functions.Accounts.Queries.TFASetup
 {
@@ -38,7 +39,7 @@ namespace Application.Functions.Accounts.Queries.TFASetup
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to load. Request: {Name} {@Request}", typeof(SignInCommand).Name, request);
-                return new Response<TFASetupDto>(false, ex.Message, ex.Message, "Failed to load", request.requestId);
+                return new Response<TFASetupDto>(false, Constants.GeneralErrorMessage, ex.Message, "Failed to load", request.requestId);
             }
         }
     }
