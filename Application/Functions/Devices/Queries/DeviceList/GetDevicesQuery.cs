@@ -33,7 +33,7 @@ namespace Application.Functions.Devices.Queries.DeviceList
                     .Where(x => x.UserId == _currentUserService.UserId)
                     .OrderBy(request.OrderBy)
                     .ProjectTo<DeviceDto>(this._commonService.Mapper?.ConfigurationProvider)
-                    .PaginatedListAsync(request.PageNumber, request.PageSize);
+                    .PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
                 return Response<PaginatedList<DeviceDto>>.Success(result, request.requestId);
             }
             catch (Exception ex)

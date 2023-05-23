@@ -38,7 +38,7 @@ namespace Application.Functions.FormDatas.Queries.FormFieldList
 					.Where(x =>
 						x.DBTable == request.DBTable
 					)
-					.OrderBy(x => x.SortOrder).ToListAsync();
+					.OrderBy(x => x.SortOrder).ToListAsync(cancellationToken);
 				foreach ( var field in fields ) {
 					// check permissions
 					if (String.IsNullOrEmpty(field.PermissionRoles) || await IsCurrentUserInRoles(field.PermissionRoles))
@@ -54,8 +54,8 @@ namespace Application.Functions.FormDatas.Queries.FormFieldList
 											Value = request.ParentId
 										}
 									};
-							var editVal = _commonService.ApplicationDBContext.GetSingleValueQueryString
-								.FromSqlRaw("SELECT CAST([" + field.DBColumn + "] AS nvarchar(MAX)) as val FROM dbo.[" + field.DBTable + "] WHERE id=@par", param).ToList();
+							var editVal = await _commonService.ApplicationDBContext.GetSingleValueQueryString
+								.FromSqlRaw("SELECT CAST([" + field.DBColumn + "] AS nvarchar(MAX)) as val FROM dbo.[" + field.DBTable + "] WHERE id=@par", param).ToListAsync(cancellationToken);
 							fieldDto.DBValue = (editVal == null || editVal.Count() == 0 ? "" : editVal[0].val);
 						}
 						result.Add(fieldDto);

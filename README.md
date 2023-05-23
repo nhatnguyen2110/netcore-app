@@ -15,6 +15,7 @@ This is a solution template for creating an ASP.NET Core following the principle
 * [Google Recaptcha](https://www.google.com/recaptcha/about/)
 * [Redis Cache](https://redis.io/)
 * [Web Push Notification] (https://github.com/web-push-libs/web-push-csharp)
+* [WebHook Sender and Receiver]
 
 ## Getting Started
 

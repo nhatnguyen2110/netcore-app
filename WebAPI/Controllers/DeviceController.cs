@@ -20,9 +20,9 @@ namespace WebAPI.Controllers
         }
         [Authorize]
         [HttpGet("[action]")]
-        public async Task<ActionResult<Response<PaginatedList<DeviceDto>>>> List([FromQuery] GetDevicesQuery query)
+        public async Task<ActionResult<Response<PaginatedList<DeviceDto>>>> List([FromQuery] GetDevicesQuery query, CancellationToken token)
         {
-            var result = await Mediator.Send(query);
+            var result = await Mediator.Send(query, token);
             if (result.Succeeded)
             {
                 return result;
@@ -33,9 +33,9 @@ namespace WebAPI.Controllers
             }
         }
         [HttpPost("[action]")]
-        public async Task<ActionResult<Response<int>>> Create([FromBody] DeviceCreateCommand request)
+        public async Task<ActionResult<Response<int>>> Create([FromBody] DeviceCreateCommand request, CancellationToken token)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, token);
             if (result.Succeeded)
             {
                 return result;
@@ -47,9 +47,9 @@ namespace WebAPI.Controllers
         }
         [Authorize]
         [HttpDelete("[action]")]
-        public async Task<ActionResult<Response<Unit>>> DeleteUserDevices()
+        public async Task<ActionResult<Response<Unit>>> DeleteUserDevices(CancellationToken token)
         {
-            var result = await Mediator.Send(new DeviceDeleteByUserIdCommand() { UserId = _currentUserService.UserId ?? "" });
+            var result = await Mediator.Send(new DeviceDeleteByUserIdCommand() { UserId = _currentUserService.UserId ?? "" }, token);
             if (result.Succeeded)
             {
                 return result;
@@ -60,9 +60,9 @@ namespace WebAPI.Controllers
             }
         }
         [HttpDelete("[action]")]
-        public async Task<ActionResult<Response<Unit>>> Delete([FromQuery] DeviceDeleteCommand request)
+        public async Task<ActionResult<Response<Unit>>> Delete([FromQuery] DeviceDeleteCommand request, CancellationToken token)
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(request, token);
             if (result.Succeeded)
             {
                 return result;

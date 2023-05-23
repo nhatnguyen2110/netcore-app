@@ -38,7 +38,7 @@ namespace Application.Functions.FormDatas.Commands.FormBuilder
         {
             try
             {
-                var formFields = await _commonService.ApplicationDBContext.FormDatas.AsNoTracking().Where(x => !x.Deleted && x.DBTable == request.TableName).ToListAsync();
+                var formFields = await _commonService.ApplicationDBContext.FormDatas.AsNoTracking().Where(x => !x.Deleted && x.DBTable == request.TableName).ToListAsync(cancellationToken);
 #pragma warning disable CS8604 // Possible null reference argument.
                 var userId = _currentUserService.UserId;
                 var ado = new ADOBuilder(_commonService.ApplicationDBContext, request.TableName, userId, _configuration);

@@ -40,7 +40,7 @@ namespace Application.Functions.FormDatas.Queries.FormList
 						DBTable = s.Key.DBTable,
 						Count = s.Count()
 					})
-					.PaginatedListAsync(request.PageNumber, request.PageSize);
+					.PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 				return Response<PaginatedList<FormDBTableDto>>.Success(result, request.requestId);
 			}
 			catch (Exception ex)

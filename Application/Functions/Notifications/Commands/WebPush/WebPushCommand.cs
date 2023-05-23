@@ -32,7 +32,7 @@ namespace Application.Functions.Notifications.Commands.WebPush
                 string vapidPrivateKey = _configuration.GetSection("VapidKeys")["PrivateKey"] ?? "";
                 string vapidSubject = _configuration.GetSection("VapidKeys")["Subject"] ?? "";
                 var vapidDetails = new VapidDetails("mailto:example@example.com", vapidPublicKey, vapidPrivateKey);
-                var devices = await _commonService.ApplicationDBContext.Devices.AsNoTracking().Where(x => x.UserId == request.UserId).ToListAsync();
+                var devices = await _commonService.ApplicationDBContext.Devices.AsNoTracking().Where(x => x.UserId == request.UserId).ToListAsync(cancellationToken);
                 foreach (var device in devices)
                 {
                     var pushSubscription = new PushSubscription(device.PushEndpoint, device.PushP256DH, device.PushAuth);

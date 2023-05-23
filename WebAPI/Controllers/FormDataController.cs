@@ -14,9 +14,9 @@ namespace WebAPI.Controllers
 	{
 		[Authorize(Roles = "Administrator")]
 		[HttpGet("[action]")]
-		public async Task<ActionResult<Response<PaginatedList<FormDBTableDto>>>> GetFormList([FromQuery] FormListQuery query)
+		public async Task<ActionResult<Response<PaginatedList<FormDBTableDto>>>> GetFormList([FromQuery] FormListQuery query, CancellationToken token)
 		{
-			var result = await Mediator.Send(query);
+			var result = await Mediator.Send(query, token);
 			if (result.Succeeded)
 			{
 				return result;
@@ -28,9 +28,9 @@ namespace WebAPI.Controllers
 		}
 		[Authorize(Roles = "Administrator")]
 		[HttpGet("[action]")]
-		public async Task<ActionResult<Response<PaginatedList<FormFieldDto>>>> GetFormFieldList([FromQuery] FormFieldListQuery query)
+		public async Task<ActionResult<Response<PaginatedList<FormFieldDto>>>> GetFormFieldList([FromQuery] FormFieldListQuery query, CancellationToken token)
 		{
-			var result = await Mediator.Send(query);
+			var result = await Mediator.Send(query, token);
 			if (result.Succeeded)
 			{
 				return result;
@@ -42,9 +42,9 @@ namespace WebAPI.Controllers
 		}
 		[Authorize]
 		[HttpGet("[action]")]
-		public async Task<ActionResult<Response<List<FormFieldDto>>>> GetFormFieldIncludeValueList([FromQuery] FormFieldListIncludeValueQuery query)
+		public async Task<ActionResult<Response<List<FormFieldDto>>>> GetFormFieldIncludeValueList([FromQuery] FormFieldListIncludeValueQuery query, CancellationToken token)
 		{
-			var result = await Mediator.Send(query);
+			var result = await Mediator.Send(query, token);
 			if (result.Succeeded)
 			{
 				return result;
@@ -56,13 +56,13 @@ namespace WebAPI.Controllers
 		}
 		[Authorize]
 		[HttpPost("submit-insert/{tableName}")]
-		public async Task<ActionResult<Response<string>>> SubmitInsert(string tableName)
+		public async Task<ActionResult<Response<string>>> SubmitInsert(string tableName, CancellationToken token)
 		{
 			var result = await Mediator.Send(new FormBuilderInsertCommand
 			{
 				TableName = tableName,
 				Fields = Request.Form.Keys.ToDictionary(k => k, v => Request.Form[v].ToString())
-			});
+			}, token);
 			if (result.Succeeded)
 			{
 				return result;
@@ -74,7 +74,7 @@ namespace WebAPI.Controllers
 		}
         [Authorize]
         [HttpPost("submit-update/{tableName}/{parentId}")]
-        public async Task<ActionResult<Response<Unit>>> SubmitUpdate(string tableName, string parentId)
+        public async Task<ActionResult<Response<Unit>>> SubmitUpdate(string tableName, string parentId, CancellationToken token)
         {
             var result = await Mediator.Send(new FormBuilderUpdateCommand
             {
@@ -82,7 +82,7 @@ namespace WebAPI.Controllers
 				ParentColumnName= "Id", // primary key for almost tables
 				ParentId = parentId,
                 Fields = Request.Form.Keys.ToDictionary(k => k, v => Request.Form[v].ToString())
-            });
+            }, token);
             if (result.Succeeded)
             {
                 return result;

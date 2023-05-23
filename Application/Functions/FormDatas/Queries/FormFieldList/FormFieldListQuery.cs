@@ -34,7 +34,7 @@ namespace Application.Functions.FormDatas.Queries.FormFieldList
 					)
 					.OrderBy(x => x.SortOrder)
 					.ProjectTo<FormFieldDto>(this._commonService.Mapper?.ConfigurationProvider)
-					.PaginatedListAsync(request.PageNumber, request.PageSize);
+					.PaginatedListAsync(request.PageNumber, request.PageSize, cancellationToken);
 				return Response<PaginatedList<FormFieldDto>>.Success(result, request.requestId);
 			}
 			catch (Exception ex)
