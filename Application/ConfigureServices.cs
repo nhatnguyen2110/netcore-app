@@ -1,4 +1,5 @@
 ﻿using Application.Common.Behaviours;
+using Application.Common.MediatR;
 using Application.Models.Settings;
 using FluentValidation;
 using MediatR;
@@ -21,7 +22,8 @@ namespace Application
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-
+                cfg.NotificationPublisher = new CustomPublisher(); // this will be singleton
+                cfg.NotificationPublisherType = typeof(CustomPublisher); // this will be the ServiceLifetime
             });
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             services.Configure<ApplicationSettings>(configuration.GetSection(nameof(ApplicationSettings)))
