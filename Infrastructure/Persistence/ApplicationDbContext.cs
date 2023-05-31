@@ -4,6 +4,7 @@ using Domain.Entities.Forms;
 using Domain.Entities.Log;
 using Domain.Entities.Notifications;
 using Domain.Entities.User;
+using Domain.Entities.Webhook;
 using Infrastructure.Persistence.Interceptors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,9 @@ namespace Infrastructure.Persistence
 		public virtual DbSet<SPSingleValueQueryResultString> GetSingleValueQueryString { get; set; }
         public virtual DbSet<SPColumnTypes> GetSPColumnTypes { get; set; }
         public DbSet<Device> Devices => Set<Device>();
+        public DbSet<WebHook> WebHooks => Set<WebHook>();
+        public DbSet<WebHookHeader> WebHookHeaders => Set<WebHookHeader>();
+        public DbSet<WebHookRecord> WebHookRecords => Set<WebHookRecord>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

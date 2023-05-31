@@ -247,7 +247,9 @@ namespace Domain.Common
                     encryptor.KeySize = 256;
                     encryptor.BlockSize = 128;
 
+#pragma warning disable IDE0090 // Use 'new(...)'
                     Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(encryptionKey, _salt);
+#pragma warning restore IDE0090 // Use 'new(...)'
                     encryptor.Key = key.GetBytes(encryptor.KeySize / 8);
                     encryptor.IV = key.GetBytes(encryptor.BlockSize / 8);
                     encryptor.Mode = CipherMode.CBC;
@@ -271,6 +273,20 @@ namespace Domain.Common
 #pragma warning restore CA2200 // Rethrow to preserve stack details
             }
             return result;
+        }
+        
+    }
+    public static class EnumExtensionMethods
+    {
+        public static string GetEnumDescription(this Enum enumValue)
+        {
+            var fieldInfo = enumValue.GetType().GetField(enumValue.ToString());
+            if (fieldInfo != null)
+            {
+                var descriptionAttributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                return descriptionAttributes.Length > 0 ? descriptionAttributes[0].Description : enumValue.ToString();
+            }
+            return string.Empty;
         }
     }
 }

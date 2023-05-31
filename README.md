@@ -19,8 +19,6 @@ This is a solution template for creating an ASP.NET Core following the principle
 
 ## Getting Started
 
-The easiest way to get started is to install the [NuGet package](https://www.nuget.org/packages/Clean.Architecture.Solution.Template) and run `dotnet new ca-sln`:
-
 1. Install the latest [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
 2. Navigate to `src/WebAPI` and launch the project using `dotnet run`
 
