@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Mappings;
+using Application.Functions.WebHooks.Internals;
 using Application.Models;
 using Application.Models.Devices;
 using Domain;
@@ -20,9 +21,12 @@ namespace Application.Functions.Devices.Commands.Create
     }
     public class DeviceCreateCommandHandler : BaseHandler<DeviceCreateCommand, Response<int>>
     {
+        private readonly IPublisher _publisher;
         public DeviceCreateCommandHandler(ICommonService commonService,
-            ILogger<DeviceCreateCommand> logger) : base(commonService, logger)
+            ILogger<DeviceCreateCommand> logger,
+            IMediator mediator) : base(commonService, logger)
         {
+            _publisher = mediator;
         }
         public async override Task<Response<int>> Handle(DeviceCreateCommand request, CancellationToken cancellationToken)
         {
@@ -38,6 +42,12 @@ namespace Application.Functions.Devices.Commands.Create
                 };
                 _commonService.ApplicationDBContext.Devices.Add(entity);
                 await _commonService.ApplicationDBContext.SaveChangesAsync(cancellationToken);
+                await _publisher.Publish(new EventNotify() { 
+                    CommonService = this._commonService,
+                    HookEventType = Domain.Enums.HookEventType.device_create, 
+                    PublishStrategy = Domain.Enums.PublishStrategy.ParallelNoWait,
+                    PayLoad = entity
+                });
                 return Response<int>.Success(entity.Id, request.requestId);
             }
             catch (Exception ex)
