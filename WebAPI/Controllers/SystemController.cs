@@ -45,13 +45,7 @@ namespace WebAPI.Controllers
                         GoogleSiteKey = _applicationSettings.GoogleSiteKey,
                         GoogleAuthClientId = _configuration["Authentication:Google:ClientId"],
                         VapidPublicKey = _configuration["Authentication:PublicKey"],
-                        //EventTypes = Enum.GetValues(typeof(HookEventType)).Cast<HookEventType>()
-                        //            .Select(t=>new
-                        //            {
-                        //                Id = (int)t,
-                        //                Name = t.ToString(),
-                        //                Description = t.GetEnumDescription()
-                        //            })
+                        EventTypes =  typeof(HookEventType).SelectList()
                     }
                     )
                 );

@@ -8,11 +8,11 @@ namespace Domain.Enums
     /// </summary>
     public enum HookEventType
     {
-        [Description("Create a Device")]
+        [Display(Name = "Create a Device")]
         device_create,
-        [Description("Update a Device")]
+        [Display(Name = "Update a Device")]
         device_update,
-        [Description("Delete a Device")]
+        [Display(Name = "Delete a Device")]
         device_delete,
     }
 }

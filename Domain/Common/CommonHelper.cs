@@ -1,8 +1,10 @@
 ﻿using NETCore.Encrypt;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -208,7 +210,9 @@ namespace Domain.Common
                     encryptor.KeySize = 256;
                     encryptor.BlockSize = 128;
 
+#pragma warning disable SYSLIB0041 // Type or member is obsolete
                     Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(encryptionKey, _salt);
+#pragma warning restore SYSLIB0041 // Type or member is obsolete
                     encryptor.Key = key.GetBytes(encryptor.KeySize / 8);
                     encryptor.IV = key.GetBytes(encryptor.BlockSize / 8);
                     encryptor.Mode = CipherMode.CBC;
@@ -248,7 +252,9 @@ namespace Domain.Common
                     encryptor.BlockSize = 128;
 
 #pragma warning disable IDE0090 // Use 'new(...)'
+#pragma warning disable SYSLIB0041 // Type or member is obsolete
                     Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(encryptionKey, _salt);
+#pragma warning restore SYSLIB0041 // Type or member is obsolete
 #pragma warning restore IDE0090 // Use 'new(...)'
                     encryptor.Key = key.GetBytes(encryptor.KeySize / 8);
                     encryptor.IV = key.GetBytes(encryptor.BlockSize / 8);
@@ -278,7 +284,7 @@ namespace Domain.Common
     }
     public static class EnumExtensionMethods
     {
-        public static string GetEnumDescription(this Enum enumValue)
+        public static string GetDescription(this Enum enumValue)
         {
             var fieldInfo = enumValue.GetType().GetField(enumValue.ToString());
             if (fieldInfo != null)
@@ -287,6 +293,59 @@ namespace Domain.Common
                 return descriptionAttributes.Length > 0 ? descriptionAttributes[0].Description : enumValue.ToString();
             }
             return string.Empty;
+        }
+        public static string GetDisplayName(this Enum enumValue)
+        {
+            var a = enumValue.GetType().GetMember(enumValue.ToString());
+            if (a.Count() > 0)
+            {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8603 // Possible null reference return.
+                return a.First().GetCustomAttribute<DisplayAttribute>().GetName();
+#pragma warning restore CS8603 // Possible null reference return.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }
+            else
+            {
+                return "** Unknown Constant **";
+            }
+        }
+        public static string GetShortName(this Enum enumValue)
+        {
+            var a = enumValue.GetType().GetMember(enumValue.ToString());
+            if (a.Count() > 0)
+            {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8603 // Possible null reference return.
+                return a.First().GetCustomAttribute<DisplayAttribute>().GetShortName();
+#pragma warning restore CS8603 // Possible null reference return.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }
+            else
+            {
+                return "** Unknown Constant **";
+            }
+        }
+
+        public static Dictionary<int, string> SelectList(this Type enumType)
+        {
+            Dictionary<int, string> result = new Dictionary<int, string>();
+            Array items = Enum.GetValues(enumType);
+            foreach (var item in items)
+            {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+                result.Add(
+                    (int)item,
+                    enumType
+                        .GetMember(item.ToString())
+                        .First()
+                        .GetCustomAttribute<DisplayAttribute>()
+                        .GetName());
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }
+            return result;
         }
     }
 }
