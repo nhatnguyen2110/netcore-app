@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 using System.Security.Cryptography;
 
 namespace Infrastructure.Services
@@ -380,6 +381,40 @@ namespace Infrastructure.Services
             var data = await this.GetSignInResult(user, false, int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720"));
             return data;
         }
+        public async Task<SignInResultDto> MicrosoftLoginAsync(ExternalAuthDto externalAuth)
+        {
+#pragma warning disable CS8604 // Possible null reference argument.
+            var payload = await _tokenService.VerifyMicrosoftTokenAsync(externalAuth.IdToken);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+            if (payload == null)
+                throw new Exception("Invalid External Authentication.");
+#pragma warning disable CS8604 // Possible null reference argument.
+            // Access claims from the validated Azure AD token
+            var userId = payload.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var info = new UserLoginInfo(externalAuth.Provider, userId, externalAuth.Provider);
+#pragma warning restore CS8604 // Possible null reference argument.
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(payload.FindFirst(ClaimTypes.Email)?.Value ?? "");
+                if (user == null)
+                {
+                    user = new ApplicationUser { Email = payload.FindFirst(ClaimTypes.Email)?.Value, UserName = payload.FindFirst(ClaimTypes.Email)?.Value, FirstName = payload.FindFirst(ClaimTypes.Name)?.Value };
+                    await _userManager.CreateAsync(user);
+                    //prepare and send an email for the email confirmation
+                    await _userManager.AddToRoleAsync(user, RoleList.Member.ToString());
+                    await _userManager.AddLoginAsync(user, info);
+                }
+                else
+                {
+                    await _userManager.AddLoginAsync(user, info);
+                }
+            }
+            // should we check for the Locked out account???
+            var data = await this.GetSignInResult(user, false, int.Parse(_configuration["JwtSettings:keepLoginRefreshTokenValidityInHours"] ?? "720"));
+            return data;
+        }
         private async Task<SignInResultDto> GetSignInResult(ApplicationUser user, bool isTFAEnable, double refreshTokenExpireInHours)
         {
             var roles = await _userManager.GetRolesAsync(user);
@@ -399,5 +434,6 @@ namespace Infrastructure.Services
             await _userManager.UpdateAsync(user);
             return data;
         }
+
     }
 }

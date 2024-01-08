@@ -25,12 +25,14 @@ namespace Application.Functions.Accounts.Commands.ExternalLogin
         {
             try
             {
-                switch (request.Provider)
+                switch ((request.Provider??"").ToLower())
                 {
-                    case "GOOGLE":
+                    case "google":
                         return Response<SignInResultDto>.Success(await _identityService.GoogleLoginAsync(request), request.requestId);
-                    case "FACEBOOK":
+                    case "facebook":
                         return Response<SignInResultDto>.Success(await _identityService.FacebookLoginAsync(request), request.requestId);
+                    case "microsoft":
+                        return Response<SignInResultDto>.Success(await _identityService.MicrosoftLoginAsync(request), request.requestId);
                     default:
                         throw new Exception("Invalid Provider");
                 }

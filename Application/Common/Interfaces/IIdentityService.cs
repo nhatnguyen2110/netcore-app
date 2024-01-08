@@ -21,5 +21,6 @@ namespace Application.Common.Interfaces
 		Task<AuthTokenDto> RefreshTokenAsync(string accessToken, string refreshToken);
         Task<SignInResultDto> GoogleLoginAsync(ExternalAuthDto externalAuth);
         Task<SignInResultDto> FacebookLoginAsync(ExternalAuthDto externalAuth);
+        Task<SignInResultDto> MicrosoftLoginAsync(ExternalAuthDto externalAuth);
     }
 }

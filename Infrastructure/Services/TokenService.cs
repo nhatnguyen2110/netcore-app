@@ -2,6 +2,8 @@
 using Domain.Entities.User;
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Tokens;
 using SocialNetworkAPI;
 using SocialNetworkAPI.FacebookJsonWeb;
@@ -102,5 +104,45 @@ namespace Infrastructure.Services
             var payload = await _socialNetworkClient.VerifyFacebookTokenAsync(token);
             return payload;
         }
+
+        public async Task<ClaimsPrincipal> VerifyMicrosoftTokenAsync(string token)
+        {
+            var clientId = _configuration["Authentication:Microsoft:ClientId"] ?? "";
+            var tenantId = _configuration["Authentication:Microsoft:TenantId"] ?? "";
+            var audience = _configuration["Authentication:Microsoft:Audience"] ?? "";
+
+            // Validate Azure AD token
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = $"https://login.microsoftonline.com/{tenantId}", 
+                ValidAudience = clientId,
+                ValidateAudience = true, 
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKeys = await GetIssuerSigningKeys(tenantId), // Implement the method to get the signing keys
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero, // Adjust as needed
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            return tokenHandler.ValidateToken(token, validationParameters, out _);
+        }
+        private async Task<IEnumerable<SecurityKey>> GetIssuerSigningKeys(string tenantId)
+        {
+            string authority = $"https://login.microsoftonline.com/{tenantId}";
+            // Construct the OpenID Connect configuration endpoint URL
+            string openIdConfigEndpoint = $"{authority}/.well-known/openid-configuration";
+
+            // Use the ConfigurationManager to retrieve the OpenID Connect configuration
+            IConfigurationManager<OpenIdConnectConfiguration> configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                openIdConfigEndpoint,
+                new OpenIdConnectConfigurationRetriever(),
+                new HttpDocumentRetriever());
+
+            // Retrieve the OpenID Connect configuration
+            OpenIdConnectConfiguration openIdConfig = await configurationManager.GetConfigurationAsync(CancellationToken.None).ConfigureAwait(false);
+
+            return openIdConfig.SigningKeys;
+        }
+
     }
 }

@@ -10,5 +10,6 @@ namespace Application.Common.Interfaces
         string CreateToken(ApplicationUser user, IList<string> roles);
         Task<GoogleJsonWebSignature.Payload> VerifyGoogleTokenAsync(string token);
         Task<SocialNetworkAPI.FacebookJsonWeb.Payload> VerifyFacebookTokenAsync(string token);
+        Task<ClaimsPrincipal> VerifyMicrosoftTokenAsync(string token);
     }
 }
