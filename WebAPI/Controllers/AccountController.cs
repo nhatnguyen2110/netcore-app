@@ -172,6 +172,15 @@ namespace WebAPI.Controllers
 				return BadRequest(result);
 			}
 		}
+        /// <summary>
+        /// Single Sign On with Providers: Google, Facebook, Microsoft...
+        /// return a custom token is used for API Service
+        /// </summary>
+        /// <param name="command">
+        /// provider: Google, Facebook, Microsoft
+        /// idToken: provider's token
+        /// </param>
+        /// <returns></returns>
         [HttpPost("[action]")]
         public async Task<ActionResult<Response<SignInResultDto>>> ExternalLogin(ExternalLoginCommand command)
         {

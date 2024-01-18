@@ -47,9 +47,10 @@ namespace WebAPI.Extensions
             {
                 options.AddPolicy(Constants.CorsPolicy, configurePolicy: builder =>
                 {
-                    builder.AllowAnyOrigin()
+                    builder
+                    .AllowAnyOrigin()
                     .AllowAnyHeader()
-                    .AllowAnyHeader();
+                    .AllowAnyMethod();
                 });
             });
         }

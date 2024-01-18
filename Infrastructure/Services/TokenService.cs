@@ -109,13 +109,12 @@ namespace Infrastructure.Services
         {
             var clientId = _configuration["Authentication:Microsoft:ClientId"] ?? "";
             var tenantId = _configuration["Authentication:Microsoft:TenantId"] ?? "";
-            var audience = _configuration["Authentication:Microsoft:Audience"] ?? "";
 
             // Validate Azure AD token
             var validationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = $"https://login.microsoftonline.com/{tenantId}", 
+                ValidIssuer = $"https://login.microsoftonline.com/{tenantId}/v2.0", 
                 ValidAudience = clientId,
                 ValidateAudience = true, 
                 ValidateIssuerSigningKey = true,
