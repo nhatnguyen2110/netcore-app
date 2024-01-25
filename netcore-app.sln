@@ -23,9 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkAPI", "SocialNetworkAPI\SocialNetworkAPI.csproj", "{0D4EF12D-6C3E-4CDB-BCEF-AF2981570299}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureSupportService", "AzureSupportService\AzureSupportService.csproj", "{53194DDA-6CD9-4F21-B165-D30DC8F72F93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureSupportService", "AzureSupportService\AzureSupportService.csproj", "{53194DDA-6CD9-4F21-B165-D30DC8F72F93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphAPI", "GraphAPI\GraphAPI.csproj", "{CA68EC04-50D6-4EAE-B3F4-1F0F391DBBB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphAPI", "GraphAPI\GraphAPI.csproj", "{CA68EC04-50D6-4EAE-B3F4-1F0F391DBBB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj", "{0A42EB56-5215-4BEB-9696-3AA1D5C80F9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,10 @@ Global
 		{CA68EC04-50D6-4EAE-B3F4-1F0F391DBBB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA68EC04-50D6-4EAE-B3F4-1F0F391DBBB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA68EC04-50D6-4EAE-B3F4-1F0F391DBBB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A42EB56-5215-4BEB-9696-3AA1D5C80F9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A42EB56-5215-4BEB-9696-3AA1D5C80F9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A42EB56-5215-4BEB-9696-3AA1D5C80F9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A42EB56-5215-4BEB-9696-3AA1D5C80F9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{0D4EF12D-6C3E-4CDB-BCEF-AF2981570299} = {8B4D4C6E-1C7A-479A-9DE8-D9486AA53151}
 		{53194DDA-6CD9-4F21-B165-D30DC8F72F93} = {8B4D4C6E-1C7A-479A-9DE8-D9486AA53151}
 		{CA68EC04-50D6-4EAE-B3F4-1F0F391DBBB1} = {8B4D4C6E-1C7A-479A-9DE8-D9486AA53151}
+		{0A42EB56-5215-4BEB-9696-3AA1D5C80F9C} = {3B3E38A7-705E-4745-B732-450F780418B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {627923C1-89AA-43D0-A9C7-9B6E8DE278B1}
