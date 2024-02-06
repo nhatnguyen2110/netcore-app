@@ -1,4 +1,6 @@
 ﻿using Application.Common.DBSupports;
+using Domain.Entities.Contacts;
+using Domain.Entities.Customers;
 using Domain.Entities.Forms;
 using Domain.Entities.Log;
 using Domain.Entities.Notifications;
@@ -15,8 +17,10 @@ namespace Application.Common.Interfaces
         DbSet<WebHook> WebHooks { get; }
         DbSet<WebHookHeader> WebHookHeaders { get; }
         DbSet<WebHookRecord> WebHookRecords { get; }
+        DbSet<Contact> Contacts { get; }
+        DbSet<Customer> Customers { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-		DbSet<SPSingleValueQueryResultString> GetSingleValueQueryString { get; set; }
+        DbSet<SPSingleValueQueryResultString> GetSingleValueQueryString { get; set; }
         DbSet<SPColumnTypes> GetSPColumnTypes { get; set; }
     }
 }
